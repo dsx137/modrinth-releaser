@@ -7,7 +7,7 @@ import fs from "fs";
 import * as utils from "./utils.js";
 import * as values from "./values.js";
 
-const debug = true;
+const debug = false;
 
 const baseData = utils.cleanObject({
   name: values.name,
@@ -41,8 +41,7 @@ function log(...message) {
 function getRequest(headers = {}, body = undefined) {
   return utils.cleanObject({
     headers: {
-      "User-Agent": `teamsunset/lavafishing/1.1.0`,
-      // "User-Agent": `${github.context.repo.owner}/${github.context.repo.repo}/${github.context.sha}`,
+      "User-Agent": `${github.context.repo.owner}/${github.context.repo.repo}/${github.context.sha}`,
       "Authorization": values.api_token,
       ...headers
     },
@@ -89,19 +88,26 @@ async function getUploadForm() {
 const version = await getCurrentVersion();
 if (version === undefined) {
   const form = await getUploadForm();
-  utils.methodFetch("POST", `/version`, getRequest(form.getHeaders(), form)).then(async (res) => {
+  await utils.methodFetch("POST", `/version`, getRequest(form.getHeaders(), form)).then(async (res) => {
     if (!res.ok) terminate(await res.json())
   });
 } else {
-  utils.methodFetch("PATCH", `/version/${version.id}`, getRequest({ "Content-Type": "application/json" }, JSON.stringify(baseData))).then(async (res) => {
+  await utils.methodFetch("PATCH", `/version/${version.id}`, getRequest({ "Content-Type": "application/json" }, JSON.stringify(baseData))).then(async (res) => {
     if (!res.ok) terminate(await res.json())
   });
 
   const form = new FormData();
+  form.append("data", JSON.stringify({}));
   Object.entries(await getFilesData()).forEach(([index, file]) => {
     form.append(file.name, fs.createReadStream(file.path));
   });
-  utils.methodFetch("PATCH", `/version/${version.id}`, getRequest(form.getHeaders(), form)).then(async (res) => {
+  await utils.methodFetch("POST", `/version/${version.id}/file`, getRequest(form.getHeaders(), form)).then(async (res) => {
     if (!res.ok) terminate(await res.json())
+  });
+
+  version.files.forEach(async (file) => {
+    await utils.methodFetch("DELETE", `/version_file/${file.hashes.sha512}`, getRequest()).then(async (res) => {
+      if (!res.ok) terminate(await res.json())
+    });
   });
 }
