@@ -30,19 +30,11 @@
       version_number: 1.1.0
       files: |
           ./build/libs/*-all.jar
-      dependencies: >
-          [
-              {
-              "project_id": "Vl1uNAuy",
-              "dependency_type": "required"
-              },{
-              "project_id": "ordsPcFz",
-              "dependency_type": "required"
-              }
-          ]
+      dependencies: Vl1uNAuy:required, ordsPcFz:required
       changelog: "some message"
       version_type: release # or beta, alpha
       featured: false
       status: 'listed' # or archived, draft, unlisted, scheduled, unknown
       requested_status: 'listed' # or archived, draft, unlisted
+      delete_files_if_exists: true
 ```

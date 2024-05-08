@@ -42829,38 +42829,7 @@ __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 
 
 
-const debug = false;
-
-const baseData = _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .cleanObject */ .sW({
-  name: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .name */ .u2,
-  version_number: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .version_number */ .dA,
-  changelog: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .changelog */ .VI,
-  dependencies: JSON.parse(_values_js__WEBPACK_IMPORTED_MODULE_5__/* .dependencies */ .HO),
-  game_versions: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .game_versions.split */ .hB.split(", "),
-  version_type: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .version_type.toLowerCase */ .wp.toLowerCase(),
-  loaders: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .loaders.split */ .Hl.split(", "),
-  featured: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .featured */ .GC,
-  status: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .status.toLowerCase */ .i7.toLowerCase(),
-  requested_status: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .requested_status.toLowerCase */ .lR.toLowerCase()
-});
-
-function terminate(json) {
-  if (debug) {
-    console.error(json);
-    process.exit(1);
-  } else {
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(JSON.stringify(json));
-    process.exit(1);
-  }
-}
-
-function log(...message) {
-  if (debug) {
-    console.info(...message);
-  } else {
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(message.join(" "));
-  }
-}
+const terminate = (json) => { _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(JSON.stringify(json)); process.exit(1); }
 
 function getRequest(headers = {}, body = undefined) {
   return _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .cleanObject */ .sW({
@@ -42876,8 +42845,7 @@ function getRequest(headers = {}, body = undefined) {
 async function getCurrentVersion() {
   return await _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("GET", `/project/${_values_js__WEBPACK_IMPORTED_MODULE_5__/* .project_id */ .wK}/version`, getRequest()).then(async (res) => {
     const json = await res.json();
-
-    if (!res.ok) terminate()
+    if (!res.ok) terminate(json)
 
     return json.find((version) => version.version_number === _values_js__WEBPACK_IMPORTED_MODULE_5__/* .version_number */ .dA);
   });
@@ -42891,18 +42859,39 @@ async function getFilesData() {
   });
 }
 
-log("debug:", debug);
+const dependencies = _values_js__WEBPACK_IMPORTED_MODULE_5__/* .dependencies.split */ .HO.split(',')
+  .filter((dependency) => { return dependency != null && dependency != '' })
+  .map((dependency) => {
+    const [project_id, dependency_type] = dependency.split(':')
+    if (!['required', 'optional', 'incompatible', 'embedded'].includes(dependency_type)) {
+      terminate(`Invalid dependency type: ${dependency_type}`)
+    }
+    return { project_id, dependency_type }
+  });
+
+const baseData = _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .cleanObject */ .sW({
+  name: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .name */ .u2,
+  version_number: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .version_number */ .dA,
+  changelog: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .changelog */ .VI,
+  dependencies,
+  game_versions: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .game_versions.split */ .hB.split(", "),
+  version_type: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .version_type.toLowerCase */ .wp.toLowerCase(),
+  loaders: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .loaders.split */ .Hl.split(", "),
+  featured: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .featured */ .GC,
+  status: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .status.toLowerCase */ .i7.toLowerCase(),
+  requested_status: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .requested_status.toLowerCase */ .lR.toLowerCase()
+});
 
 const filesData = await getFilesData()
 const file_parts = [];
 Object.entries(filesData).forEach(([index, file]) => {
   file_parts.push(file.name);
 });
-log("Files to upload:", file_parts.join(", "));
+_actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Files to upload: ${file_parts.join(", ")}`);
 
 const version = await getCurrentVersion();
 if (version === undefined) {
-  log("Creating new version...");
+  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Creating new version...");
 
   const data = { ...baseData, file_parts, project_id: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .project_id */ .wK };
 
@@ -42914,31 +42903,33 @@ if (version === undefined) {
 
   _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("POST", `/version`, getRequest(form.getHeaders(), form)).then(async (res) => {
     if (!res.ok) terminate(await res.json())
-    log("Version created successfully!");
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Version created successfully!");
   });
 } else {
-  log("Updating existing version...");
+  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Updating existing version...");
   _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("PATCH", `/version/${version.id}`, getRequest({ "Content-Type": "application/json" }, JSON.stringify(baseData))).then(async (res) => {
     if (!res.ok) terminate(await res.json())
-    log("Version updated successfully!");
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Version updated successfully!");
 
     const form = new form_data__WEBPACK_IMPORTED_MODULE_1__();
     form.append("data", JSON.stringify({}));
     Object.entries(filesData).forEach(([index, file]) => {
       form.append(file.name, fs__WEBPACK_IMPORTED_MODULE_3__.createReadStream(file.path));
     });
-    log("Uploading new files...");
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Uploading new files...");
     _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("POST", `/version/${version.id}/file`, getRequest(form.getHeaders(), form)).then(async (res) => {
       if (!res.ok) terminate(await res.json())
-      log("Files uploaded successfully!");
-      log("Deleting old files...");
+      _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Files uploaded successfully!");
+      _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Deleting old files...");
 
-      version.files.forEach(async (file) => {
-        _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("DELETE", `/version_file/${file.hashes.sha512}`, getRequest()).then(async (res) => {
-          if (!res.ok) terminate(await res.json())
-          log("File deleted successfully!");
+      if (_values_js__WEBPACK_IMPORTED_MODULE_5__/* .delete_files_if_exists */ .xR) {
+        version.files.forEach(async (file) => {
+          _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("DELETE", `/version_file/${file.hashes.sha512}`, getRequest()).then(async (res) => {
+            if (!res.ok) terminate(await res.json())
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("File deleted successfully!");
+          });
         });
-      });
+      }
     });
   });
 }
@@ -45169,7 +45160,8 @@ async function methodFetch(method, path, data) {
 /* harmony export */   "lR": () => (/* binding */ requested_status),
 /* harmony export */   "u2": () => (/* binding */ name),
 /* harmony export */   "wK": () => (/* binding */ project_id),
-/* harmony export */   "wp": () => (/* binding */ version_type)
+/* harmony export */   "wp": () => (/* binding */ version_type),
+/* harmony export */   "xR": () => (/* binding */ delete_files_if_exists)
 /* harmony export */ });
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(872);
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(214);
@@ -45191,6 +45183,7 @@ const loaders = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("loaders");
 const featured = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput("featured");
 const status = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("status");
 const requested_status = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("requested_status");
+const delete_files_if_exists = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput("delete_files_if_exists");
 
 
 /***/ }),

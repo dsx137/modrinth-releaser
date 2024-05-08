@@ -6,38 +6,7 @@ import fs from "fs";
 import * as utils from "./utils.js";
 import * as values from "./values.js";
 
-const debug = false;
-
-const baseData = utils.cleanObject({
-  name: values.name,
-  version_number: values.version_number,
-  changelog: values.changelog,
-  dependencies: JSON.parse(values.dependencies),
-  game_versions: values.game_versions.split(", "),
-  version_type: values.version_type.toLowerCase(),
-  loaders: values.loaders.split(", "),
-  featured: values.featured,
-  status: values.status.toLowerCase(),
-  requested_status: values.requested_status.toLowerCase()
-});
-
-function terminate(json) {
-  if (debug) {
-    console.error(json);
-    process.exit(1);
-  } else {
-    core.setFailed(JSON.stringify(json));
-    process.exit(1);
-  }
-}
-
-function log(...message) {
-  if (debug) {
-    console.info(...message);
-  } else {
-    core.info(message.join(" "));
-  }
-}
+const terminate = (json) => { core.setFailed(JSON.stringify(json)); process.exit(1); }
 
 function getRequest(headers = {}, body = undefined) {
   return utils.cleanObject({
@@ -53,8 +22,7 @@ function getRequest(headers = {}, body = undefined) {
 async function getCurrentVersion() {
   return await utils.methodFetch("GET", `/project/${values.project_id}/version`, getRequest()).then(async (res) => {
     const json = await res.json();
-
-    if (!res.ok) terminate()
+    if (!res.ok) terminate(json)
 
     return json.find((version) => version.version_number === values.version_number);
   });
@@ -68,18 +36,39 @@ async function getFilesData() {
   });
 }
 
-log("debug:", debug);
+const dependencies = values.dependencies.split(',')
+  .filter((dependency) => { return dependency != null && dependency != '' })
+  .map((dependency) => {
+    const [project_id, dependency_type] = dependency.split(':')
+    if (!['required', 'optional', 'incompatible', 'embedded'].includes(dependency_type)) {
+      terminate(`Invalid dependency type: ${dependency_type}`)
+    }
+    return { project_id, dependency_type }
+  });
+
+const baseData = utils.cleanObject({
+  name: values.name,
+  version_number: values.version_number,
+  changelog: values.changelog,
+  dependencies,
+  game_versions: values.game_versions.split(", "),
+  version_type: values.version_type.toLowerCase(),
+  loaders: values.loaders.split(", "),
+  featured: values.featured,
+  status: values.status.toLowerCase(),
+  requested_status: values.requested_status.toLowerCase()
+});
 
 const filesData = await getFilesData()
 const file_parts = [];
 Object.entries(filesData).forEach(([index, file]) => {
   file_parts.push(file.name);
 });
-log("Files to upload:", file_parts.join(", "));
+core.info(`Files to upload: ${file_parts.join(", ")}`);
 
 const version = await getCurrentVersion();
 if (version === undefined) {
-  log("Creating new version...");
+  core.info("Creating new version...");
 
   const data = { ...baseData, file_parts, project_id: values.project_id };
 
@@ -91,31 +80,33 @@ if (version === undefined) {
 
   utils.methodFetch("POST", `/version`, getRequest(form.getHeaders(), form)).then(async (res) => {
     if (!res.ok) terminate(await res.json())
-    log("Version created successfully!");
+    core.info("Version created successfully!");
   });
 } else {
-  log("Updating existing version...");
+  core.info("Updating existing version...");
   utils.methodFetch("PATCH", `/version/${version.id}`, getRequest({ "Content-Type": "application/json" }, JSON.stringify(baseData))).then(async (res) => {
     if (!res.ok) terminate(await res.json())
-    log("Version updated successfully!");
+    core.info("Version updated successfully!");
 
     const form = new FormData();
     form.append("data", JSON.stringify({}));
     Object.entries(filesData).forEach(([index, file]) => {
       form.append(file.name, fs.createReadStream(file.path));
     });
-    log("Uploading new files...");
+    core.info("Uploading new files...");
     utils.methodFetch("POST", `/version/${version.id}/file`, getRequest(form.getHeaders(), form)).then(async (res) => {
       if (!res.ok) terminate(await res.json())
-      log("Files uploaded successfully!");
-      log("Deleting old files...");
+      core.info("Files uploaded successfully!");
+      core.info("Deleting old files...");
 
-      version.files.forEach(async (file) => {
-        utils.methodFetch("DELETE", `/version_file/${file.hashes.sha512}`, getRequest()).then(async (res) => {
-          if (!res.ok) terminate(await res.json())
-          log("File deleted successfully!");
+      if (values.delete_files_if_exists) {
+        version.files.forEach(async (file) => {
+          utils.methodFetch("DELETE", `/version_file/${file.hashes.sha512}`, getRequest()).then(async (res) => {
+            if (!res.ok) terminate(await res.json())
+            core.info("File deleted successfully!");
+          });
         });
-      });
+      }
     });
   });
 }
