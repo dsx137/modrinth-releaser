@@ -16,4 +16,3 @@ export const loaders = core.getInput("loaders");
 export const featured = core.getBooleanInput("featured");
 export const status = core.getInput("status");
 export const requested_status = core.getInput("requested_status");
-
