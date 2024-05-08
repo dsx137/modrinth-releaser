@@ -42922,23 +42922,23 @@ if (version === undefined) {
   _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("PATCH", `/version/${version.id}`, getRequest({ "Content-Type": "application/json" }, JSON.stringify(baseData))).then(async (res) => {
     if (!res.ok) terminate(await res.json())
     log("Version updated successfully!");
-  });
 
-  const form = new form_data__WEBPACK_IMPORTED_MODULE_1__();
-  form.append("data", JSON.stringify({}));
-  Object.entries(await getFilesData()).forEach(([index, file]) => {
-    form.append(file.name, fs__WEBPACK_IMPORTED_MODULE_3__.createReadStream(file.path));
-  });
-  log("Uploading new files...");
-  _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("POST", `/version/${version.id}/file`, getRequest(form.getHeaders(), form)).then(async (res) => {
-    if (!res.ok) terminate(await res.json())
-    log("Files uploaded successfully!");
-    log("Deleting old files...");
+    const form = new form_data__WEBPACK_IMPORTED_MODULE_1__();
+    form.append("data", JSON.stringify({}));
+    Object.entries(await getFilesData()).forEach(([index, file]) => {
+      form.append(file.name, fs__WEBPACK_IMPORTED_MODULE_3__.createReadStream(file.path));
+    });
+    log("Uploading new files...");
+    _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("POST", `/version/${version.id}/file`, getRequest(form.getHeaders(), form)).then(async (res) => {
+      if (!res.ok) terminate(await res.json())
+      log("Files uploaded successfully!");
+      log("Deleting old files...");
 
-    version.files.forEach(async (file) => {
-      _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("DELETE", `/version_file/${file.hashes.sha512}`, getRequest()).then(async (res) => {
-        if (!res.ok) terminate(await res.json())
-        log("File deleted successfully!");
+      version.files.forEach(async (file) => {
+        _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("DELETE", `/version_file/${file.hashes.sha512}`, getRequest()).then(async (res) => {
+          if (!res.ok) terminate(await res.json())
+          log("File deleted successfully!");
+        });
       });
     });
   });
