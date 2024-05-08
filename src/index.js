@@ -39,7 +39,7 @@ async function getFilesData() {
 const dependencies = values.dependencies.split(',')
   .filter((dependency) => { return dependency != null && dependency != '' })
   .map((dependency) => {
-    const [project_id, dependency_type] = dependency.split(':').map((it) => { return it.trim() });
+    const [project_id, dependency_type] = dependency.split(':').map(it => it.trim());
     if (!['required', 'optional', 'incompatible', 'embedded'].includes(dependency_type)) {
       terminate(`Invalid dependency type: ${dependency_type}`)
     }
@@ -51,9 +51,9 @@ const baseData = utils.cleanObject({
   version_number: values.version_number,
   changelog: values.changelog,
   dependencies,
-  game_versions: values.game_versions.split(", "),
+  game_versions: values.game_versions.split(',').map(it => it.trim()),
   version_type: values.version_type.toLowerCase(),
-  loaders: values.loaders.split(", "),
+  loaders: values.loaders.split(',').map(it => it.trim()),
   featured: values.featured,
   status: values.status.toLowerCase(),
   requested_status: values.requested_status.toLowerCase()

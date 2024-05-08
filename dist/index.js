@@ -42862,7 +42862,7 @@ async function getFilesData() {
 const dependencies = _values_js__WEBPACK_IMPORTED_MODULE_5__/* .dependencies.split */ .HO.split(',')
   .filter((dependency) => { return dependency != null && dependency != '' })
   .map((dependency) => {
-    const [project_id, dependency_type] = dependency.split(':').map((it) => { return it.trim() });
+    const [project_id, dependency_type] = dependency.split(':').map(it => it.trim());
     if (!['required', 'optional', 'incompatible', 'embedded'].includes(dependency_type)) {
       terminate(`Invalid dependency type: ${dependency_type}`)
     }
@@ -42874,9 +42874,9 @@ const baseData = _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .cleanObject */ .sW({
   version_number: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .version_number */ .dA,
   changelog: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .changelog */ .VI,
   dependencies,
-  game_versions: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .game_versions.split */ .hB.split(", "),
+  game_versions: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .game_versions.split */ .hB.split(',').map(it => it.trim()),
   version_type: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .version_type.toLowerCase */ .wp.toLowerCase(),
-  loaders: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .loaders.split */ .Hl.split(", "),
+  loaders: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .loaders.split */ .Hl.split(',').map(it => it.trim()),
   featured: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .featured */ .GC,
   status: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .status.toLowerCase */ .i7.toLowerCase(),
   requested_status: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .requested_status.toLowerCase */ .lR.toLowerCase()
