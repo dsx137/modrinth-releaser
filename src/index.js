@@ -39,7 +39,7 @@ async function getFilesData() {
 const dependencies = values.dependencies.split(',')
   .filter((dependency) => { return dependency != null && dependency != '' })
   .map((dependency) => {
-    const [project_id, dependency_type] = dependency.split(':')
+    const [project_id, dependency_type] = dependency.split(':').map((it) => { return it.trim() });
     if (!['required', 'optional', 'incompatible', 'embedded'].includes(dependency_type)) {
       terminate(`Invalid dependency type: ${dependency_type}`)
     }
