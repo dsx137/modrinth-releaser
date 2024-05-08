@@ -6,7 +6,7 @@ import fs from "fs";
 import * as utils from "./utils.js";
 import * as values from "./values.js";
 
-const debug = false;
+const debug = true;
 
 const baseData = utils.cleanObject({
   name: values.name,
@@ -87,11 +87,11 @@ async function getUploadForm() {
 const version = await getCurrentVersion();
 if (version === undefined) {
   const form = await getUploadForm();
-  await utils.methodFetch("POST", `/version`, getRequest(form.getHeaders(), form)).then(async (res) => {
+  utils.methodFetch("POST", `/version`, getRequest(form.getHeaders(), form)).then(async (res) => {
     if (!res.ok) terminate(await res.json())
   });
 } else {
-  await utils.methodFetch("PATCH", `/version/${version.id}`, getRequest({ "Content-Type": "application/json" }, JSON.stringify(baseData))).then(async (res) => {
+  utils.methodFetch("PATCH", `/version/${version.id}`, getRequest({ "Content-Type": "application/json" }, JSON.stringify(baseData))).then(async (res) => {
     if (!res.ok) terminate(await res.json())
   });
 
@@ -100,13 +100,13 @@ if (version === undefined) {
   Object.entries(await getFilesData()).forEach(([index, file]) => {
     form.append(file.name, fs.createReadStream(file.path));
   });
-  await utils.methodFetch("POST", `/version/${version.id}/file`, getRequest(form.getHeaders(), form)).then(async (res) => {
+  utils.methodFetch("POST", `/version/${version.id}/file`, getRequest(form.getHeaders(), form)).then(async (res) => {
     if (!res.ok) terminate(await res.json())
-  });
 
-  version.files.forEach(async (file) => {
-    await utils.methodFetch("DELETE", `/version_file/${file.hashes.sha512}`, getRequest()).then(async (res) => {
-      if (!res.ok) terminate(await res.json())
+    version.files.forEach(async (file) => {
+      utils.methodFetch("DELETE", `/version_file/${file.hashes.sha512}`, getRequest()).then(async (res) => {
+        if (!res.ok) terminate(await res.json())
+      });
     });
   });
 }

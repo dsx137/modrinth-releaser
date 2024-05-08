@@ -42829,7 +42829,7 @@ __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 
 
 
-const debug = false;
+const debug = true;
 
 const baseData = _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .cleanObject */ .sW({
   name: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .name */ .u2,
@@ -42910,11 +42910,11 @@ async function getUploadForm() {
 const version = await getCurrentVersion();
 if (version === undefined) {
   const form = await getUploadForm();
-  await _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("POST", `/version`, getRequest(form.getHeaders(), form)).then(async (res) => {
+  _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("POST", `/version`, getRequest(form.getHeaders(), form)).then(async (res) => {
     if (!res.ok) terminate(await res.json())
   });
 } else {
-  await _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("PATCH", `/version/${version.id}`, getRequest({ "Content-Type": "application/json" }, JSON.stringify(baseData))).then(async (res) => {
+  _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("PATCH", `/version/${version.id}`, getRequest({ "Content-Type": "application/json" }, JSON.stringify(baseData))).then(async (res) => {
     if (!res.ok) terminate(await res.json())
   });
 
@@ -42923,13 +42923,13 @@ if (version === undefined) {
   Object.entries(await getFilesData()).forEach(([index, file]) => {
     form.append(file.name, fs__WEBPACK_IMPORTED_MODULE_3__.createReadStream(file.path));
   });
-  await _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("POST", `/version/${version.id}/file`, getRequest(form.getHeaders(), form)).then(async (res) => {
+  _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("POST", `/version/${version.id}/file`, getRequest(form.getHeaders(), form)).then(async (res) => {
     if (!res.ok) terminate(await res.json())
-  });
 
-  version.files.forEach(async (file) => {
-    await _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("DELETE", `/version_file/${file.hashes.sha512}`, getRequest()).then(async (res) => {
-      if (!res.ok) terminate(await res.json())
+    version.files.forEach(async (file) => {
+      _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("DELETE", `/version_file/${file.hashes.sha512}`, getRequest()).then(async (res) => {
+        if (!res.ok) terminate(await res.json())
+      });
     });
   });
 }
@@ -45167,23 +45167,37 @@ async function methodFetch(method, path, data) {
 
 
 
-const api_token = process.env.MODRINTH_TOKEN;
-const user_agent = `${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner}/${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo}/${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.sha}`
+// export const api_token = process.env.MODRINTH_TOKEN;
+// export const user_agent = `${github.context.repo.owner}/${github.context.repo.repo}/${github.context.sha}`
 
-const project_id = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("project_id");
-const version_number = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("version_number");
-const files = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("files");
-const name = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("name");
-const changelog = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("changelog");
-const dependencies = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("dependencies");
-const game_versions = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("game_versions");
-const version_type = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("version_type");
-const loaders = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("loaders");
-const featured = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput("featured");
-const status = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("status");
-const requested_status = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("requested_status");
+// export const project_id = core.getInput("project_id");
+// export const version_number = core.getInput("version_number");
+// export const files = core.getInput("files");
+// export const name = core.getInput("name");
+// export const changelog = core.getInput("changelog");
+// export const dependencies = core.getInput("dependencies");
+// export const game_versions = core.getInput("game_versions");
+// export const version_type = core.getInput("version_type");
+// export const loaders = core.getInput("loaders");
+// export const featured = core.getBooleanInput("featured");
+// export const status = core.getInput("status");
+// export const requested_status = core.getInput("requested_status");
 
+const api_token = "mrp_2uRI1PSS9Kk931RSVUesQ4C5uFf0ArVB9H29UR3JTilvpTEfymKXXvIjNz6h";
+const user_agent = `teamsunset/lavafishing/1.1.0`
 
+const project_id = "puTJzCb0"
+const version_number = "1.20.1-1.1.0"
+const files = "test.jar"
+const name = "1.20.1-1.1.0"
+const changelog = ''
+const dependencies = '[]'
+const game_versions = '1.20.1'
+const version_type = 'release'
+const loaders = 'forge'
+const featured = false
+const status = ''
+const requested_status = '' 
 
 /***/ }),
 
