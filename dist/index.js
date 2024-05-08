@@ -2,66 +2,106 @@
 import core from "@actions/core";
 import github from "@actions/github";
 import FormData from "form-data";
-import fetch from "node-fetch";
 import path from "path";
 import fs from "fs";
-const api_token = core.getInput("api_token");
-const project_id = core.getInput("project_id");
-const version_number = core.getInput("version_number");
-const files = core.getInput("files");
-const name = core.getInput("name");
-const changelog = core.getInput("changelog");
-const dependencies = core.getInput("dependencies");
-const game_versions = core.getInput("game_versions");
-const version_type = core.getInput("version_type");
-const loaders = core.getInput("loaders");
-const featured = core.getBooleanInput("featured");
-const status = core.getInput("status");
-const requested_status = core.getInput("requested_status");
-const form = new FormData();
-const file_parts = [];
-const filesData = JSON.parse(files).map((file) => {
-  const filename = path.basename(file);
-  file_parts.push(filename);
-  return { path: file, name: filename };
+import * as utils from "./utils.js";
+import * as values from "./values.js";
+
+const debug = true;
+
+const baseData = utils.cleanObject({
+  name: values.name,
+  version_number: values.version_number,
+  changelog: values.changelog,
+  dependencies: JSON.parse(values.dependencies),
+  game_versions: values.game_versions.split(", "),
+  version_type: values.version_type.toLowerCase(),
+  loaders: values.loaders.split(", "),
+  featured: values.featured,
+  status: values.status.toLowerCase(),
+  requested_status: values.requested_status.toLowerCase()
 });
-const data = {
-  project_id,
-  version_number,
-  file_parts,
-  name,
-  changelog,
-  dependencies: JSON.parse(dependencies),
-  game_versions: game_versions.split(", "),
-  version_type: version_type.toLowerCase(),
-  loaders: loaders.split(", "),
-  featured,
-  status: status.toLowerCase(),
-  requested_status: requested_status.toLowerCase()
-};
-const dataCleaned = {};
-Object.keys(data).forEach((key) => {
-  const value = data[key];
-  if (value !== "") {
-    dataCleaned[key] = value;
-  }
-});
-form.append("data", JSON.stringify(dataCleaned));
-filesData.forEach((file) => {
-  form.append(file.name, fs.createReadStream(file.path));
-});
-fetch("https://api.modrinth.com/v2/version", {
-  method: "POST",
-  headers: {
-    "User-Agent": `${github.context.repo.owner}/${github.context.repo.repo}/${github.context.sha}`,
-    "Authorization": api_token,
-    ...form.getHeaders()
-  },
-  body: form
-}).then(async (res) => {
-  const json = await res.json();
-  core.info(JSON.stringify(json));
-  if (!res.ok) {
+
+function terminate(json) {
+  if (debug) {
+    console.error(json);
+  } else {
     core.setFailed(JSON.stringify(json));
   }
-});
+}
+
+function log(...message) {
+  if (debug) {
+    console.info(...message);
+  } else {
+    core.info(...message);
+  }
+}
+
+function getRequest(headers = {}, body = undefined) {
+  return utils.cleanObject({
+    headers: {
+      "User-Agent": `teamsunset/lavafishing/1.1.0`,
+      // "User-Agent": `${github.context.repo.owner}/${github.context.repo.repo}/${github.context.sha}`,
+      "Authorization": values.api_token,
+      ...headers
+    },
+    body: body
+  })
+}
+
+async function getCurrentVersion() {
+  return await utils.methodFetch("GET", `/project/${values.project_id}/version`, getRequest()).then(async (res) => {
+    const json = await res.json();
+
+    if (!res.ok) terminate()
+
+    return json.find((version) => version.version_number === values.version_number);
+  });
+}
+
+async function getFilesData() {
+  const matchedFiles = await utils.matchFilesFromPatterns(utils.parseInputFiles(values.files));
+
+  return matchedFiles.map((file) => {
+    return { path: file, name: path.basename(file) };
+  });
+}
+
+async function getUploadForm() {
+  const filesData = await getFilesData()
+  const file_parts = [];
+  Object.entries(filesData).forEach(([index, file]) => {
+    file_parts.push(file.name);
+  });
+
+  const data = { ...baseData, file_parts, project_id: values.project_id };
+
+  const form = new FormData();
+  form.append("data", JSON.stringify(data));
+  Object.entries(filesData).forEach(([index, file]) => {
+    form.append(file.name, fs.createReadStream(file.path));
+  });
+
+  return form;
+}
+
+const version = await getCurrentVersion();
+if (version === undefined) {
+  const form = await getUploadForm();
+  utils.methodFetch("POST", `/version`, getRequest(form.getHeaders(), form)).then(async (res) => {
+    if (!res.ok) terminate(await res.json())
+  });
+} else {
+  utils.methodFetch("PATCH", `/version/${version.id}`, getRequest({ "Content-Type": "application/json" }, JSON.stringify(baseData))).then(async (res) => {
+    if (!res.ok) terminate(await res.json())
+  });
+
+  const form = new FormData();
+  Object.entries(await getFilesData()).forEach(([index, file]) => {
+    form.append(file.name, fs.createReadStream(file.path));
+  });
+  utils.methodFetch("PATCH", `/version/${version.id}`, getRequest(form.getHeaders(), form)).then(async (res) => {
+    if (!res.ok) terminate(await res.json())
+  });
+}
