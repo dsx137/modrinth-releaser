@@ -6,7 +6,7 @@ import fs from "fs";
 import * as utils from "./utils.js";
 import * as values from "./values.js";
 
-const debug = true;
+const debug = false;
 
 const baseData = utils.cleanObject({
   name: values.name,
