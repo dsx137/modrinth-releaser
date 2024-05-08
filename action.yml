@@ -6,9 +6,6 @@ branding:
   color: 'green'
 
 inputs:
-  api_token:
-    description: 'The Modrinth API token'
-    required: true
   project_id:
     description: 'The Modrinth project ID'
     required: true
