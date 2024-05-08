@@ -1,8 +1,8 @@
-# modrinth-upload-action
+# modrinth-release-action
 
 ```yml
 - name: Modrinth Release
-uses: dsx137/modrinth-upload-action@main
+uses: dsx137/modrinth-release-action@main
 env:
     MODRINTH_TOKEN: xxx
 with:
