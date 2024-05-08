@@ -42816,13 +42816,11 @@ return new B(c,{type:"multipart/form-data; boundary="+b})}
 
 __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(872);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(214);
-/* harmony import */ var form_data__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(8576);
-/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(1017);
-/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(7147);
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(4891);
-/* harmony import */ var _values_js__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(2206);
-
+/* harmony import */ var form_data__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(8576);
+/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(1017);
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(7147);
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(4891);
+/* harmony import */ var _values_js__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(2206);
 
 
 
@@ -42833,17 +42831,17 @@ __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 
 const debug = false;
 
-const baseData = _utils_js__WEBPACK_IMPORTED_MODULE_5__/* .cleanObject */ .sW({
-  name: _values_js__WEBPACK_IMPORTED_MODULE_6__/* .name */ .u2,
-  version_number: _values_js__WEBPACK_IMPORTED_MODULE_6__/* .version_number */ .dA,
-  changelog: _values_js__WEBPACK_IMPORTED_MODULE_6__/* .changelog */ .VI,
-  dependencies: JSON.parse(_values_js__WEBPACK_IMPORTED_MODULE_6__/* .dependencies */ .HO),
-  game_versions: _values_js__WEBPACK_IMPORTED_MODULE_6__/* .game_versions.split */ .hB.split(", "),
-  version_type: _values_js__WEBPACK_IMPORTED_MODULE_6__/* .version_type.toLowerCase */ .wp.toLowerCase(),
-  loaders: _values_js__WEBPACK_IMPORTED_MODULE_6__/* .loaders.split */ .Hl.split(", "),
-  featured: _values_js__WEBPACK_IMPORTED_MODULE_6__/* .featured */ .GC,
-  status: _values_js__WEBPACK_IMPORTED_MODULE_6__/* .status.toLowerCase */ .i7.toLowerCase(),
-  requested_status: _values_js__WEBPACK_IMPORTED_MODULE_6__/* .requested_status.toLowerCase */ .lR.toLowerCase()
+const baseData = _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .cleanObject */ .sW({
+  name: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .name */ .u2,
+  version_number: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .version_number */ .dA,
+  changelog: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .changelog */ .VI,
+  dependencies: JSON.parse(_values_js__WEBPACK_IMPORTED_MODULE_5__/* .dependencies */ .HO),
+  game_versions: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .game_versions.split */ .hB.split(", "),
+  version_type: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .version_type.toLowerCase */ .wp.toLowerCase(),
+  loaders: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .loaders.split */ .Hl.split(", "),
+  featured: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .featured */ .GC,
+  status: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .status.toLowerCase */ .i7.toLowerCase(),
+  requested_status: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .requested_status.toLowerCase */ .lR.toLowerCase()
 });
 
 function terminate(json) {
@@ -42863,10 +42861,10 @@ function log(...message) {
 }
 
 function getRequest(headers = {}, body = undefined) {
-  return _utils_js__WEBPACK_IMPORTED_MODULE_5__/* .cleanObject */ .sW({
+  return _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .cleanObject */ .sW({
     headers: {
-      "User-Agent": `${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner}/${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo}/${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.sha}`,
-      "Authorization": _values_js__WEBPACK_IMPORTED_MODULE_6__/* .api_token */ .Fw,
+      "User-Agent": _values_js__WEBPACK_IMPORTED_MODULE_5__/* .user_agent */ ._n,
+      "Authorization": _values_js__WEBPACK_IMPORTED_MODULE_5__/* .api_token */ .Fw,
       ...headers
     },
     body: body
@@ -42874,20 +42872,20 @@ function getRequest(headers = {}, body = undefined) {
 }
 
 async function getCurrentVersion() {
-  return await _utils_js__WEBPACK_IMPORTED_MODULE_5__/* .methodFetch */ .oO("GET", `/project/${_values_js__WEBPACK_IMPORTED_MODULE_6__/* .project_id */ .wK}/version`, getRequest()).then(async (res) => {
+  return await _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("GET", `/project/${_values_js__WEBPACK_IMPORTED_MODULE_5__/* .project_id */ .wK}/version`, getRequest()).then(async (res) => {
     const json = await res.json();
 
     if (!res.ok) terminate()
 
-    return json.find((version) => version.version_number === _values_js__WEBPACK_IMPORTED_MODULE_6__/* .version_number */ .dA);
+    return json.find((version) => version.version_number === _values_js__WEBPACK_IMPORTED_MODULE_5__/* .version_number */ .dA);
   });
 }
 
 async function getFilesData() {
-  const matchedFiles = await _utils_js__WEBPACK_IMPORTED_MODULE_5__/* .matchFilesFromPatterns */ .Jj(_utils_js__WEBPACK_IMPORTED_MODULE_5__/* .parseInputFiles */ .jm(_values_js__WEBPACK_IMPORTED_MODULE_6__/* .files */ .QZ));
+  const matchedFiles = await _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .matchFilesFromPatterns */ .Jj(_utils_js__WEBPACK_IMPORTED_MODULE_4__/* .parseInputFiles */ .jm(_values_js__WEBPACK_IMPORTED_MODULE_5__/* .files */ .QZ));
 
   return matchedFiles.map((file) => {
-    return { path: file, name: path__WEBPACK_IMPORTED_MODULE_3__.basename(file) };
+    return { path: file, name: path__WEBPACK_IMPORTED_MODULE_2__.basename(file) };
   });
 }
 
@@ -42898,12 +42896,12 @@ async function getUploadForm() {
     file_parts.push(file.name);
   });
 
-  const data = { ...baseData, file_parts, project_id: _values_js__WEBPACK_IMPORTED_MODULE_6__/* .project_id */ .wK };
+  const data = { ...baseData, file_parts, project_id: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .project_id */ .wK };
 
-  const form = new form_data__WEBPACK_IMPORTED_MODULE_2__();
+  const form = new form_data__WEBPACK_IMPORTED_MODULE_1__();
   form.append("data", JSON.stringify(data));
   Object.entries(filesData).forEach(([index, file]) => {
-    form.append(file.name, fs__WEBPACK_IMPORTED_MODULE_4__.createReadStream(file.path));
+    form.append(file.name, fs__WEBPACK_IMPORTED_MODULE_3__.createReadStream(file.path));
   });
 
   return form;
@@ -42912,25 +42910,25 @@ async function getUploadForm() {
 const version = await getCurrentVersion();
 if (version === undefined) {
   const form = await getUploadForm();
-  await _utils_js__WEBPACK_IMPORTED_MODULE_5__/* .methodFetch */ .oO("POST", `/version`, getRequest(form.getHeaders(), form)).then(async (res) => {
+  await _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("POST", `/version`, getRequest(form.getHeaders(), form)).then(async (res) => {
     if (!res.ok) terminate(await res.json())
   });
 } else {
-  await _utils_js__WEBPACK_IMPORTED_MODULE_5__/* .methodFetch */ .oO("PATCH", `/version/${version.id}`, getRequest({ "Content-Type": "application/json" }, JSON.stringify(baseData))).then(async (res) => {
+  await _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("PATCH", `/version/${version.id}`, getRequest({ "Content-Type": "application/json" }, JSON.stringify(baseData))).then(async (res) => {
     if (!res.ok) terminate(await res.json())
   });
 
-  const form = new form_data__WEBPACK_IMPORTED_MODULE_2__();
+  const form = new form_data__WEBPACK_IMPORTED_MODULE_1__();
   form.append("data", JSON.stringify({}));
   Object.entries(await getFilesData()).forEach(([index, file]) => {
-    form.append(file.name, fs__WEBPACK_IMPORTED_MODULE_4__.createReadStream(file.path));
+    form.append(file.name, fs__WEBPACK_IMPORTED_MODULE_3__.createReadStream(file.path));
   });
-  await _utils_js__WEBPACK_IMPORTED_MODULE_5__/* .methodFetch */ .oO("POST", `/version/${version.id}/file`, getRequest(form.getHeaders(), form)).then(async (res) => {
+  await _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("POST", `/version/${version.id}/file`, getRequest(form.getHeaders(), form)).then(async (res) => {
     if (!res.ok) terminate(await res.json())
   });
 
   version.files.forEach(async (file) => {
-    await _utils_js__WEBPACK_IMPORTED_MODULE_5__/* .methodFetch */ .oO("DELETE", `/version_file/${file.hashes.sha512}`, getRequest()).then(async (res) => {
+    await _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("DELETE", `/version_file/${file.hashes.sha512}`, getRequest()).then(async (res) => {
       if (!res.ok) terminate(await res.json())
     });
   });
@@ -45155,6 +45153,7 @@ async function methodFetch(method, path, data) {
 /* harmony export */   "Hl": () => (/* binding */ loaders),
 /* harmony export */   "QZ": () => (/* binding */ files),
 /* harmony export */   "VI": () => (/* binding */ changelog),
+/* harmony export */   "_n": () => (/* binding */ user_agent),
 /* harmony export */   "dA": () => (/* binding */ version_number),
 /* harmony export */   "hB": () => (/* binding */ game_versions),
 /* harmony export */   "i7": () => (/* binding */ status),
@@ -45164,9 +45163,13 @@ async function methodFetch(method, path, data) {
 /* harmony export */   "wp": () => (/* binding */ version_type)
 /* harmony export */ });
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(872);
+/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(214);
+
 
 
 const api_token = process.env.MODRINTH_TOKEN;
+const user_agent = `${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner}/${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo}/${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.sha}`
+
 const project_id = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("project_id");
 const version_number = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("version_number");
 const files = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("files");
@@ -45179,6 +45182,7 @@ const loaders = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("loaders");
 const featured = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput("featured");
 const status = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("status");
 const requested_status = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("requested_status");
+
 
 
 /***/ }),
