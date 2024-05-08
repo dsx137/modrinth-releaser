@@ -1,6 +1,5 @@
 "use strict";
 import core from "@actions/core";
-import github from "@actions/github";
 import FormData from "form-data";
 import path from "path";
 import fs from "fs";
@@ -41,7 +40,7 @@ function log(...message) {
 function getRequest(headers = {}, body = undefined) {
   return utils.cleanObject({
     headers: {
-      "User-Agent": `${github.context.repo.owner}/${github.context.repo.repo}/${github.context.sha}`,
+      "User-Agent": values.user_agent,
       "Authorization": values.api_token,
       ...headers
     },
