@@ -1,5 +1,5 @@
-name: 'Modrinth Upload'
-description: 'Uploads a mod to Modrinth'
+name: 'Modrinth Release'
+description: 'Release a version to Modrinth'
 
 branding:
   icon: 'upload'  
