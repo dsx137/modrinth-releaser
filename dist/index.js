@@ -42847,6 +42847,7 @@ const baseData = _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .cleanObject */ .sW({
 function terminate(json) {
   if (debug) {
     console.error(json);
+    process.exit(1);
   } else {
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(JSON.stringify(json));
     process.exit(1);
