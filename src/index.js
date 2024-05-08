@@ -66,12 +66,18 @@ async function getFilesData() {
   });
 }
 
-async function getUploadForm() {
-  const filesData = await getFilesData()
-  const file_parts = [];
-  Object.entries(filesData).forEach(([index, file]) => {
-    file_parts.push(file.name);
-  });
+log("debug:", debug);
+
+const filesData = await getFilesData()
+const file_parts = [];
+Object.entries(filesData).forEach(([index, file]) => {
+  file_parts.push(file.name);
+});
+log("Files to upload:", file_parts.join(", "));
+
+const version = await getCurrentVersion();
+if (version === undefined) {
+  log("Creating new version...");
 
   const data = { ...baseData, file_parts, project_id: values.project_id };
 
@@ -81,15 +87,6 @@ async function getUploadForm() {
     form.append(file.name, fs.createReadStream(file.path));
   });
 
-  return form;
-}
-
-log("debug:", debug);
-
-const version = await getCurrentVersion();
-if (version === undefined) {
-  log("Creating new version...");
-  const form = await getUploadForm();
   utils.methodFetch("POST", `/version`, getRequest(form.getHeaders(), form)).then(async (res) => {
     if (!res.ok) terminate(await res.json())
     log("Version created successfully!");
@@ -102,7 +99,7 @@ if (version === undefined) {
 
     const form = new FormData();
     form.append("data", JSON.stringify({}));
-    Object.entries(await getFilesData()).forEach(([index, file]) => {
+    Object.entries(filesData).forEach(([index, file]) => {
       form.append(file.name, fs.createReadStream(file.path));
     });
     log("Uploading new files...");

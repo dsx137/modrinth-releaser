@@ -42889,12 +42889,18 @@ async function getFilesData() {
   });
 }
 
-async function getUploadForm() {
-  const filesData = await getFilesData()
-  const file_parts = [];
-  Object.entries(filesData).forEach(([index, file]) => {
-    file_parts.push(file.name);
-  });
+log("debug:", debug);
+
+const filesData = await getFilesData()
+const file_parts = [];
+Object.entries(filesData).forEach(([index, file]) => {
+  file_parts.push(file.name);
+});
+log("Files to upload:", file_parts.join(", "));
+
+const version = await getCurrentVersion();
+if (version === undefined) {
+  log("Creating new version...");
 
   const data = { ...baseData, file_parts, project_id: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .project_id */ .wK };
 
@@ -42904,15 +42910,6 @@ async function getUploadForm() {
     form.append(file.name, fs__WEBPACK_IMPORTED_MODULE_3__.createReadStream(file.path));
   });
 
-  return form;
-}
-
-log("debug:", debug);
-
-const version = await getCurrentVersion();
-if (version === undefined) {
-  log("Creating new version...");
-  const form = await getUploadForm();
   _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("POST", `/version`, getRequest(form.getHeaders(), form)).then(async (res) => {
     if (!res.ok) terminate(await res.json())
     log("Version created successfully!");
@@ -42925,7 +42922,7 @@ if (version === undefined) {
 
     const form = new form_data__WEBPACK_IMPORTED_MODULE_1__();
     form.append("data", JSON.stringify({}));
-    Object.entries(await getFilesData()).forEach(([index, file]) => {
+    Object.entries(filesData).forEach(([index, file]) => {
       form.append(file.name, fs__WEBPACK_IMPORTED_MODULE_3__.createReadStream(file.path));
     });
     log("Uploading new files...");
@@ -45192,7 +45189,6 @@ const loaders = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("loaders");
 const featured = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput("featured");
 const status = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("status");
 const requested_status = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("requested_status");
-
 
 
 /***/ }),
