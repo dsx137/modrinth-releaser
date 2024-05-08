@@ -22,5 +22,5 @@ with:
             }
         ]
     files: |
-        /build/libs/*-all.jar
+        ./build/libs/*-all.jar
 ```
