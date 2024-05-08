@@ -97,9 +97,9 @@ if (version === undefined) {
     utils.methodFetch("POST", `/version/${version.id}/file`, getRequest(form.getHeaders(), form)).then(async (res) => {
       if (!res.ok) terminate(await res.json())
       core.info("Files uploaded successfully!");
-      core.info("Deleting old files...");
 
       if (values.delete_files_if_exists) {
+        core.info("Deleting old files...");
         version.files.forEach(async (file) => {
           utils.methodFetch("DELETE", `/version_file/${file.hashes.sha512}`, getRequest()).then(async (res) => {
             if (!res.ok) terminate(await res.json())

@@ -42920,9 +42920,9 @@ if (version === undefined) {
     _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("POST", `/version/${version.id}/file`, getRequest(form.getHeaders(), form)).then(async (res) => {
       if (!res.ok) terminate(await res.json())
       _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Files uploaded successfully!");
-      _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Deleting old files...");
 
       if (_values_js__WEBPACK_IMPORTED_MODULE_5__/* .delete_files_if_exists */ .xR) {
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Deleting old files...");
         version.files.forEach(async (file) => {
           _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("DELETE", `/version_file/${file.hashes.sha512}`, getRequest()).then(async (res) => {
             if (!res.ok) terminate(await res.json())
