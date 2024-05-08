@@ -33,7 +33,7 @@ function log(...message) {
   if (debug) {
     console.info(...message);
   } else {
-    core.info(...message);
+    core.info(message.join(" "));
   }
 }
 
@@ -84,15 +84,21 @@ async function getUploadForm() {
   return form;
 }
 
+log("debug:", debug);
+
 const version = await getCurrentVersion();
 if (version === undefined) {
+  log("Creating new version...");
   const form = await getUploadForm();
   utils.methodFetch("POST", `/version`, getRequest(form.getHeaders(), form)).then(async (res) => {
     if (!res.ok) terminate(await res.json())
+    log("Version created successfully!");
   });
 } else {
+  log("Updating existing version...");
   utils.methodFetch("PATCH", `/version/${version.id}`, getRequest({ "Content-Type": "application/json" }, JSON.stringify(baseData))).then(async (res) => {
     if (!res.ok) terminate(await res.json())
+    log("Version updated successfully!");
   });
 
   const form = new FormData();
@@ -100,12 +106,16 @@ if (version === undefined) {
   Object.entries(await getFilesData()).forEach(([index, file]) => {
     form.append(file.name, fs.createReadStream(file.path));
   });
+  log("Uploading new files...");
   utils.methodFetch("POST", `/version/${version.id}/file`, getRequest(form.getHeaders(), form)).then(async (res) => {
     if (!res.ok) terminate(await res.json())
+    log("Files uploaded successfully!");
+    log("Deleting old files...");
 
     version.files.forEach(async (file) => {
       utils.methodFetch("DELETE", `/version_file/${file.hashes.sha512}`, getRequest()).then(async (res) => {
         if (!res.ok) terminate(await res.json())
+        log("File deleted successfully!");
       });
     });
   });
