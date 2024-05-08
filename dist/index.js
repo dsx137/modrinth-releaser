@@ -42849,6 +42849,7 @@ function terminate(json) {
     console.error(json);
   } else {
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(JSON.stringify(json));
+    process.exit(1);
   }
 }
 

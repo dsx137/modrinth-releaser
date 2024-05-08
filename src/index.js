@@ -24,8 +24,10 @@ const baseData = utils.cleanObject({
 function terminate(json) {
   if (debug) {
     console.error(json);
+    process.exit(1);
   } else {
     core.setFailed(JSON.stringify(json));
+    process.exit(1);
   }
 }
 
