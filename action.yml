@@ -45,6 +45,10 @@ inputs:
   requested_status:
     description: 'The requested status of this version.'
     required: false
+  delete_files_if_exists:
+    description: 'Whether to delete files if they already exist. Defaults to true.'
+    required: false
+    default: 'true'
 
 runs:
   using: 'node20'
