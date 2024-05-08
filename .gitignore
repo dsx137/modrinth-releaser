@@ -128,3 +128,4 @@ out
 .pnp.*
 
 .vscode
+node_modules
