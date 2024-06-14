@@ -42867,7 +42867,7 @@ _values_js__WEBPACK_IMPORTED_MODULE_5__/* .dependencies.split */ .HO.split(',')
     if (!['required', 'optional', 'incompatible', 'embedded'].includes(dependency_type)) {
       terminate(`Invalid dependency type: ${dependency_type}`)
     }
-    dependencies.append({ project_id, dependency_type });
+    dependencies.push({ project_id, dependency_type });
   });
 
 const game_versions = [];
