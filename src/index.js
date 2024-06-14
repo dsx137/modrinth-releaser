@@ -36,14 +36,15 @@ async function getFilesData() {
   });
 }
 
-const dependencies = values.dependencies.split(',')
+const dependencies = [];
+values.dependencies.split(',')
   .filter((dependency) => { return dependency != null && dependency != '' && dependency != undefined })
   .map((dependency) => {
     const [project_id, dependency_type] = dependency.split(':').map(it => it.trim());
     if (!['required', 'optional', 'incompatible', 'embedded'].includes(dependency_type)) {
       terminate(`Invalid dependency type: ${dependency_type}`)
     }
-    return { project_id, dependency_type }
+    dependencies.append({ project_id, dependency_type });
   });
 
 const game_versions = [];
