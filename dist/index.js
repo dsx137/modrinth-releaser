@@ -42869,12 +42869,41 @@ const dependencies = _values_js__WEBPACK_IMPORTED_MODULE_5__/* .dependencies.spl
     return { project_id, dependency_type }
   });
 
+const game_versions = [];
+const launcher_meta_url = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
+const minecraft_versions = await fetch(launcher_meta_url).then(async (res) => {
+  const json = await res.json();
+  if (!res.ok) terminate(json)
+  return json.versions.filter(it => it.type === "release").map(it => it.id);
+});
+_values_js__WEBPACK_IMPORTED_MODULE_5__/* .game_versions.split */ .hB.split(',').map(it => it.trim())
+  .forEach((game_version) => {
+    const push_version = (v) => {
+      if (minecraft_versions.includes(v)) game_versions.push({ v });
+      else terminate(`Invalid minecraft version: ${v}`);
+    }
+
+    if (game_version.split(':').length === 1) {
+      push_version(game_version);
+    } else {
+      const [start_game_version, end_game_version] = game_version.split(':').map(it => it.trim());
+      const start_index = minecraft_versions.indexOf(start_game_version);
+      const end_index = minecraft_versions.indexOf(end_game_version);
+      if (start_index === -1) terminate(`Invalid minecraft start version: ${game_version}`)
+      if (end_index === -1) terminate(`Invalid minecraft end version: ${game_version}`)
+      if (start_index > end_index) terminate(`Start version is greater than end version: ${game_version}`)
+      for (let i = start_index; i <= end_index; i++) {
+        push_version(minecraft_versions[i]);
+      }
+    }
+  });
+
 const baseData = _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .cleanObject */ .sW({
   name: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .name */ .u2,
   version_number: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .version_number */ .dA,
   changelog: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .changelog */ .VI,
   dependencies,
-  game_versions: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .game_versions.split */ .hB.split(',').map(it => it.trim()),
+  game_versions,
   version_type: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .version_type.toLowerCase */ .wp.toLowerCase(),
   loaders: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .loaders.split */ .Hl.split(',').map(it => it.trim()),
   featured: _values_js__WEBPACK_IMPORTED_MODULE_5__/* .featured */ .GC,
