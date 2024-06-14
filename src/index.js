@@ -66,8 +66,8 @@ values.game_versions.split(',').map(it => it.trim())
       const [start_game_version, end_game_version] = game_version.split(':').map(it => it.trim());
       const start_index = minecraft_versions.indexOf(start_game_version);
       const end_index = minecraft_versions.indexOf(end_game_version);
-      if (start_index === -1) terminate(`Invalid minecraft start version: ${game_version}`)
-      if (end_index === -1) terminate(`Invalid minecraft end version: ${game_version}`)
+      if (start_index === -1) terminate(`Invalid minecraft start version: ${start_game_version}`)
+      if (end_index === -1) terminate(`Invalid minecraft end version: ${end_game_version}`)
       if (start_index > end_index) terminate(`Start version is greater than end version: ${game_version}`)
       for (let i = start_index; i <= end_index; i++) {
         push_version(minecraft_versions[i]);
