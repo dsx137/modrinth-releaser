@@ -30,7 +30,7 @@ inputs:
   dependencies:
     description: 'The dependencies for this version. Defaults to none.'
     required: false
-    default: '[]'
+    default: ''
   version_type:
     description: 'The type of version. Defaults to release.'
     required: false
