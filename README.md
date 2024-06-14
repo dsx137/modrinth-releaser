@@ -26,7 +26,7 @@
       name: xxx
       project_id: puTJzCb0
       loaders: forge, fabric
-      game_versions: 1.20.1, 1.20.2
+      game_versions: 1.20.1, 1.20.2 # 1.12.2:1.20.6 means version range
       version_number: 1.1.0
       files: |
           ./build/libs/*-all.jar
