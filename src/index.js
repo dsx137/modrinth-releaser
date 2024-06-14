@@ -138,7 +138,6 @@ if (version === undefined) {
             core.info("File deleted: " + file.filename);
           });
         });
-        core.info("Old files deleted successfully!");
       }
     });
   });

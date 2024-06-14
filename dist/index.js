@@ -42961,7 +42961,6 @@ if (version === undefined) {
             _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("File deleted: " + file.filename);
           });
         });
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Old files deleted successfully!");
       }
     });
   });
