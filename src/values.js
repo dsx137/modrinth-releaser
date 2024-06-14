@@ -16,4 +16,5 @@ export const loaders = core.getInput("loaders");
 export const featured = core.getBooleanInput("featured");
 export const status = core.getInput("status");
 export const requested_status = core.getInput("requested_status");
-export const delete_files_if_exists = core.getBooleanInput("delete_files_if_exists");
+export const updatable = core.getBooleanInput("updatable");
+export const delete_old_files = core.getBooleanInput("delete_old_files");

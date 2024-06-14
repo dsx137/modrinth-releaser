@@ -112,6 +112,8 @@ if (version === undefined) {
     if (!res.ok) terminate(await res.json())
     core.info("Version created successfully!");
   });
+} else if (!values.updatable) {
+  core.info("Version already exists and updatable is false. Skipping...");
 } else {
   core.info("Updating existing version...");
   utils.methodFetch("PATCH", `/version/${version.id}`, getRequest({ "Content-Type": "application/json" }, JSON.stringify(baseData))).then(async (res) => {
@@ -128,14 +130,15 @@ if (version === undefined) {
       if (!res.ok) terminate(await res.json())
       core.info("Files uploaded successfully!");
 
-      if (values.delete_files_if_exists) {
+      if (values.delete_old_files && version.files.length > 0) {
         core.info("Deleting old files...");
         version.files.forEach(async (file) => {
           utils.methodFetch("DELETE", `/version_file/${file.hashes.sha512}`, getRequest()).then(async (res) => {
             if (!res.ok) terminate(await res.json())
-            core.info("File deleted successfully!");
+            core.info("File deleted: " + file.name);
           });
         });
+        core.info("Old files deleted successfully!");
       }
     });
   });
