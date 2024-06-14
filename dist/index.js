@@ -42935,6 +42935,8 @@ if (version === undefined) {
     if (!res.ok) terminate(await res.json())
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Version created successfully!");
   });
+} else if (!_values_js__WEBPACK_IMPORTED_MODULE_5__/* .updatable */ .oE) {
+  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Version already exists and updatable is false. Skipping...");
 } else {
   _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Updating existing version...");
   _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("PATCH", `/version/${version.id}`, getRequest({ "Content-Type": "application/json" }, JSON.stringify(baseData))).then(async (res) => {
@@ -42951,14 +42953,15 @@ if (version === undefined) {
       if (!res.ok) terminate(await res.json())
       _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Files uploaded successfully!");
 
-      if (_values_js__WEBPACK_IMPORTED_MODULE_5__/* .delete_files_if_exists */ .xR) {
+      if (_values_js__WEBPACK_IMPORTED_MODULE_5__/* .delete_old_files */ .IO && version.files.length > 0) {
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Deleting old files...");
         version.files.forEach(async (file) => {
           _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("DELETE", `/version_file/${file.hashes.sha512}`, getRequest()).then(async (res) => {
             if (!res.ok) terminate(await res.json())
-            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("File deleted successfully!");
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("File deleted: " + file.name);
           });
         });
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Old files deleted successfully!");
       }
     });
   });
@@ -45181,6 +45184,7 @@ async function methodFetch(method, path, data) {
 /* harmony export */   "GC": () => (/* binding */ featured),
 /* harmony export */   "HO": () => (/* binding */ dependencies),
 /* harmony export */   "Hl": () => (/* binding */ loaders),
+/* harmony export */   "IO": () => (/* binding */ delete_old_files),
 /* harmony export */   "QZ": () => (/* binding */ files),
 /* harmony export */   "VI": () => (/* binding */ changelog),
 /* harmony export */   "_n": () => (/* binding */ user_agent),
@@ -45188,10 +45192,10 @@ async function methodFetch(method, path, data) {
 /* harmony export */   "hB": () => (/* binding */ game_versions),
 /* harmony export */   "i7": () => (/* binding */ status),
 /* harmony export */   "lR": () => (/* binding */ requested_status),
+/* harmony export */   "oE": () => (/* binding */ updatable),
 /* harmony export */   "u2": () => (/* binding */ name),
 /* harmony export */   "wK": () => (/* binding */ project_id),
-/* harmony export */   "wp": () => (/* binding */ version_type),
-/* harmony export */   "xR": () => (/* binding */ delete_files_if_exists)
+/* harmony export */   "wp": () => (/* binding */ version_type)
 /* harmony export */ });
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(872);
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(214);
@@ -45213,7 +45217,8 @@ const loaders = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("loaders");
 const featured = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput("featured");
 const status = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("status");
 const requested_status = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("requested_status");
-const delete_files_if_exists = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput("delete_files_if_exists");
+const updatable = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput("updatable");
+const delete_old_files = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput("delete_old_files");
 
 
 /***/ }),
