@@ -45,7 +45,11 @@ inputs:
   requested_status:
     description: 'The requested status of this version.'
     required: false
-  delete_files_if_exists:
+  updatable:
+    description: 'Whether this version is updatable. Defaults to true.'
+    required: false
+    default: 'true'
+  delete_old_files:
     description: 'Whether to delete files if they already exist. Defaults to true.'
     required: false
     default: 'true'
