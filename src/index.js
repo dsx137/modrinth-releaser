@@ -46,12 +46,41 @@ const dependencies = values.dependencies.split(',')
     return { project_id, dependency_type }
   });
 
+const game_versions = [];
+const launcher_meta_url = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
+const minecraft_versions = await fetch(launcher_meta_url).then(async (res) => {
+  const json = await res.json();
+  if (!res.ok) terminate(json)
+  return json.versions.filter(it => it.type === "release").map(it => it.id);
+});
+values.game_versions.split(',').map(it => it.trim())
+  .forEach((game_version) => {
+    const push_version = (v) => {
+      if (minecraft_versions.includes(v)) game_versions.push({ v });
+      else terminate(`Invalid minecraft version: ${v}`);
+    }
+
+    if (game_version.split(':').length === 1) {
+      push_version(game_version);
+    } else {
+      const [start_game_version, end_game_version] = game_version.split(':').map(it => it.trim());
+      const start_index = minecraft_versions.indexOf(start_game_version);
+      const end_index = minecraft_versions.indexOf(end_game_version);
+      if (start_index === -1) terminate(`Invalid minecraft start version: ${game_version}`)
+      if (end_index === -1) terminate(`Invalid minecraft end version: ${game_version}`)
+      if (start_index > end_index) terminate(`Start version is greater than end version: ${game_version}`)
+      for (let i = start_index; i <= end_index; i++) {
+        push_version(minecraft_versions[i]);
+      }
+    }
+  });
+
 const baseData = utils.cleanObject({
   name: values.name,
   version_number: values.version_number,
   changelog: values.changelog,
   dependencies,
-  game_versions: values.game_versions.split(',').map(it => it.trim()),
+  game_versions,
   version_type: values.version_type.toLowerCase(),
   loaders: values.loaders.split(',').map(it => it.trim()),
   featured: values.featured,
