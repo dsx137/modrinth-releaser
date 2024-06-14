@@ -51,7 +51,7 @@ const launcher_meta_url = "https://launchermeta.mojang.com/mc/game/version_manif
 const minecraft_versions = await fetch(launcher_meta_url).then(async (res) => {
   const json = await res.json();
   if (!res.ok) terminate(json)
-  return json.versions.filter(it => it.type === "release").map(it => it.id);
+  return json.versions.filter(it => it.type === "release").map(it => it.id).reverse();
 });
 values.game_versions.split(',').map(it => it.trim())
   .forEach((game_version) => {
@@ -66,9 +66,9 @@ values.game_versions.split(',').map(it => it.trim())
       const [start_game_version, end_game_version] = game_version.split(':').map(it => it.trim());
       const start_index = minecraft_versions.indexOf(start_game_version);
       const end_index = minecraft_versions.indexOf(end_game_version);
-      if (start_index === -1) terminate(`Invalid minecraft start version: ${start_game_version}`)
-      if (end_index === -1) terminate(`Invalid minecraft end version: ${end_game_version}`)
-      if (start_index > end_index) terminate(`Start version is greater than end version: ${game_version}`)
+      if (start_index === -1) terminate(`Invalid minecraft start version: ${start_game_version}`);
+      if (end_index === -1) terminate(`Invalid minecraft end version: ${end_game_version}`);
+      if (start_index > end_index) terminate(`Start version is greater than end version: ${game_version}`);
       for (let i = start_index; i <= end_index; i++) {
         push_version(minecraft_versions[i]);
       }
