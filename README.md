@@ -36,5 +36,6 @@
       featured: false
       status: 'listed' # or archived, draft, unlisted, scheduled, unknown
       requested_status: 'listed' # or archived, draft, unlisted
-      delete_files_if_exists: true
+      updatable: false # default true, means updating existing version
+      delete_old_files: false # default true
 ```
