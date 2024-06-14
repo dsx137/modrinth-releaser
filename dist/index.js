@@ -42860,7 +42860,7 @@ async function getFilesData() {
 }
 
 const dependencies = _values_js__WEBPACK_IMPORTED_MODULE_5__/* .dependencies.split */ .HO.split(',')
-  .filter((dependency) => { return dependency != null && dependency != '' })
+  .filter((dependency) => { return dependency != null && dependency != '' && dependency != undefined })
   .map((dependency) => {
     const [project_id, dependency_type] = dependency.split(':').map(it => it.trim());
     if (!['required', 'optional', 'incompatible', 'embedded'].includes(dependency_type)) {
@@ -42874,7 +42874,7 @@ const launcher_meta_url = "https://launchermeta.mojang.com/mc/game/version_manif
 const minecraft_versions = await fetch(launcher_meta_url).then(async (res) => {
   const json = await res.json();
   if (!res.ok) terminate(json)
-  return json.versions.filter(it => it.type === "release").map(it => it.id);
+  return json.versions.filter(it => it.type === "release").map(it => it.id).reverse();
 });
 _values_js__WEBPACK_IMPORTED_MODULE_5__/* .game_versions.split */ .hB.split(',').map(it => it.trim())
   .forEach((game_version) => {
@@ -42889,9 +42889,9 @@ _values_js__WEBPACK_IMPORTED_MODULE_5__/* .game_versions.split */ .hB.split(',')
       const [start_game_version, end_game_version] = game_version.split(':').map(it => it.trim());
       const start_index = minecraft_versions.indexOf(start_game_version);
       const end_index = minecraft_versions.indexOf(end_game_version);
-      if (start_index === -1) terminate(`Invalid minecraft start version: ${game_version}`)
-      if (end_index === -1) terminate(`Invalid minecraft end version: ${game_version}`)
-      if (start_index > end_index) terminate(`Start version is greater than end version: ${game_version}`)
+      if (start_index === -1) terminate(`Invalid minecraft start version: ${start_game_version}`);
+      if (end_index === -1) terminate(`Invalid minecraft end version: ${end_game_version}`);
+      if (start_index > end_index) terminate(`Start version is greater than end version: ${game_version}`);
       for (let i = start_index; i <= end_index; i++) {
         push_version(minecraft_versions[i]);
       }
