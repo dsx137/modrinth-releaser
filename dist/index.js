@@ -42880,7 +42880,7 @@ const minecraft_versions = await fetch(launcher_meta_url).then(async (res) => {
 _values_js__WEBPACK_IMPORTED_MODULE_5__/* .game_versions.split */ .hB.split(',').map(it => it.trim())
   .forEach((game_version) => {
     const push_version = (v) => {
-      if (minecraft_versions.includes(v)) game_versions.push({ v });
+      if (minecraft_versions.includes(v)) game_versions.push(v);
       else terminate(`Invalid minecraft version: ${v}`);
     }
 
