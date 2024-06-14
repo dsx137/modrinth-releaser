@@ -42958,7 +42958,7 @@ if (version === undefined) {
         version.files.forEach(async (file) => {
           _utils_js__WEBPACK_IMPORTED_MODULE_4__/* .methodFetch */ .oO("DELETE", `/version_file/${file.hashes.sha512}`, getRequest()).then(async (res) => {
             if (!res.ok) terminate(await res.json())
-            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("File deleted: " + file.name);
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("File deleted: " + file.filename);
           });
         });
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Old files deleted successfully!");

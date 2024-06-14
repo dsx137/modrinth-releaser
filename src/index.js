@@ -135,7 +135,7 @@ if (version === undefined) {
         version.files.forEach(async (file) => {
           utils.methodFetch("DELETE", `/version_file/${file.hashes.sha512}`, getRequest()).then(async (res) => {
             if (!res.ok) terminate(await res.json())
-            core.info("File deleted: " + file.name);
+            core.info("File deleted: " + file.filename);
           });
         });
         core.info("Old files deleted successfully!");
