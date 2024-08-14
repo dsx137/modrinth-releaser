@@ -76,10 +76,25 @@ values.game_versions.split(',').map(it => it.trim())
     }
   });
 
+let changelog = values.changelog
+if (values.changelog_file && values.changelog_file !== 'none') {
+  if (fs.existsSync(values.changelog_file)) {
+    try {
+      changelog = fs.readFileSync(values.changelog_file)
+    }
+    catch {
+      core.warning(`Failed to read changelog file: ${values.changelog_file}`)
+    }
+  }
+  else {
+    core.notice('Changelog file not found, fallback to given changelog')
+  }
+}
+
 const baseData = utils.cleanObject({
   name: values.name,
   version_number: values.version_number,
-  changelog: values.changelog,
+  changelog,
   dependencies,
   game_versions,
   version_type: values.version_type.toLowerCase(),
