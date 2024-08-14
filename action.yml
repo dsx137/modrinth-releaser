@@ -27,6 +27,10 @@ inputs:
   changelog:
     description: 'The changelog for this version. Defaults to "Initial release."'
     required: false
+  changelog_file:
+    description: 'The file path that includes changelog. Defaults to "none". If the file not exist or failed to read, will fallback to "changelog" property'
+    required: false
+    default: 'none'
   dependencies:
     description: 'The dependencies for this version. Defaults to none.'
     required: false

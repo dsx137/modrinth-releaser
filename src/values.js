@@ -9,6 +9,7 @@ export const version_number = core.getInput("version_number");
 export const files = core.getInput("files");
 export const name = core.getInput("name");
 export const changelog = core.getInput("changelog");
+export const changelog_file = core.getInput("changelog_file");
 export const dependencies = core.getInput("dependencies");
 export const game_versions = core.getInput("game_versions");
 export const version_type = core.getInput("version_type");
