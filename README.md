@@ -32,6 +32,7 @@
           ./build/libs/*-all.jar
       dependencies: Vl1uNAuy:required, ordsPcFz:required
       changelog: "some message"
+      changelog_file: /path/to/changelog.md # if not exist, will fallback to "changelog" property
       version_type: release # or beta, alpha
       featured: false
       status: 'listed' # or archived, draft, unlisted, scheduled, unknown
