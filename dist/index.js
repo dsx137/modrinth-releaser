@@ -34815,8 +34815,8 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 
 
 
-async function listVersions() {
-    return await _net__WEBPACK_IMPORTED_MODULE_5__/* .fetchToModrinth */ .v("GET", `/project/${_values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.projectId */ .AM.projectId}/version`).then(async (res) => {
+async function listVersions(projectId) {
+    return await _net__WEBPACK_IMPORTED_MODULE_5__/* .fetchToModrinth */ .v("GET", `/project/${projectId}/version`).then(async (res) => {
         if (!res.ok)
             throw Error(`${res.status}: ${res.body}`);
         return (await res.json());
@@ -34882,7 +34882,7 @@ async function main() {
     const files = await _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.files */ .AM.files;
     const file_parts = files.map((it) => it.name);
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Files to upload: \n\t${file_parts.join("\n\t")}\n`);
-    const version = await listVersions().then((versions) => versions.find((version) => version.version_number === _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.versionNumber */ .AM.versionNumber));
+    const version = await listVersions(_values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.projectId */ .AM.projectId).then((versions) => versions.find((version) => version.version_number === _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.versionNumber */ .AM.versionNumber));
     if (_utils__WEBPACK_IMPORTED_MODULE_3__/* .isNil */ .kK(version)) {
         await createVersion({ ...baseData, file_parts, project_id: _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.projectId */ .AM.projectId }, files);
         return;
@@ -35079,7 +35079,7 @@ var utils = __nccwpck_require__(2167);
 
 // 常量
 const VERSION_MANIFEST_URL = "https://launchermeta.mojang.com/mc/game/version_manifest.json";
-const MODRINTH_API = "https://api.modrinth.com/v1";
+const MODRINTH_API = "https://api.modrinth.com/v2";
 // 环境变量和上下文
 const API_TOKEN = process.env.MODRINTH_TOKEN;
 const USER_AGENT = `${github.context.repo.owner}/${github.context.repo.repo}/${github.context.sha}`;
