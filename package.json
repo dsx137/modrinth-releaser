@@ -1,6 +1,6 @@
 {
   "name": "modrinth-releaser",
-  "version": "1.0.2",
+  "version": "v1.0.2",
   "description": "Release versions to Modrinth with github actions!",
   "type": "module",
   "main": "dist/index.js",
