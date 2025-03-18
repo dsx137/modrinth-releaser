@@ -43,13 +43,15 @@ inputs:
   status:
     description: "The status of this version."
     required: false
+    default: "listed"
   requested_status:
     description: "The requested status of this version."
     required: false
+    defaultt: "listed"
   upload_mode:
-    description: "How will be the version uploaded. Defaults to replace."
+    description: "How will be the version uploaded."
     required: false
-    default: "replace"
+    default: "normal"
 
 runs:
   using: "node20"
