@@ -4,17 +4,17 @@ import * as FormData from "form-data";
 import * as fs from "fs";
 import * as utils from "./utils";
 import * as values from "./values";
-import * as interfaces from "./defs";
+import * as defs from "./defs";
 import * as net from "./net";
 
 async function listVersions() {
   return await net.fetchToModrinth("GET", `/project/${values.INPUTS.projectId}/version`).then(async (res) => {
     if (!res.ok) throw Error(`${res.status}: ${res.body}`);
-    return (await res.json()) as interfaces.Version[];
+    return (await res.json()) as defs.Version[];
   });
 }
 
-async function createVersion(data: interfaces.DataRequestCreateVersion, files: interfaces.File[]) {
+async function createVersion(data: defs.DataRequestCreateVersion, files: defs.File[]) {
   core.info("Creating new version...");
 
   const form = new FormData();
@@ -29,7 +29,7 @@ async function createVersion(data: interfaces.DataRequestCreateVersion, files: i
   });
 }
 
-async function modifyVersion(versionId: string, data: interfaces.DataRequestModifyVersion) {
+async function modifyVersion(versionId: string, data: defs.DataRequestModifyVersion) {
   core.info("Modifying existing version...");
   await net
     .fetchToModrinth("PATCH", `/version/${versionId}`, { "Content-Type": "application/json" }, JSON.stringify(data))
@@ -39,7 +39,7 @@ async function modifyVersion(versionId: string, data: interfaces.DataRequestModi
     });
 }
 
-async function addFilesToVersion(versionId: string, files: interfaces.File[]) {
+async function addFilesToVersion(versionId: string, files: defs.File[]) {
   core.info("Adding files to version...");
   const form = new FormData();
   // form.append("data", JSON.stringify({}));
@@ -54,7 +54,7 @@ async function addFilesToVersion(versionId: string, files: interfaces.File[]) {
   });
 }
 
-async function deleteVersionFile(file: interfaces.VersionFile) {
+async function deleteVersionFile(file: defs.VersionFile) {
   await net.fetchToModrinth("DELETE", `/version_file/${file.hashes.sha512}`).then(async (res) => {
     if (!res.ok) throw Error(`${res.status}: ${res.body}`);
     core.info("File deleted: " + file.filename);

@@ -3,7 +3,7 @@ import * as path from "path";
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 import * as lib from "./lib";
-import * as structures from "./defs";
+import * as defs from "./defs";
 import * as utils from "./utils";
 
 // 常量
@@ -29,7 +29,7 @@ export const INPUTS = lib.lazy({
       )
       .then((files) => {
         return files.map((file) => {
-          return { name: path.basename(file), path: file } as structures.File;
+          return { name: path.basename(file), path: file } as defs.File;
         });
       }),
   name: () => core.getInput("name"),
@@ -50,13 +50,13 @@ export const INPUTS = lib.lazy({
   dependencies: () =>
     utils.parseList(core.getInput("dependencies")).map((dep) => {
       const [project_id, dependency_type] = utils.parsePair(dep);
-      if (!(dependency_type in structures.DEPENDENCY_TYPES)) {
+      if (!utils.isIn(defs.DEPENDENCY_TYPES, dependency_type)) {
         throw Error(`Invalid dependency type: ${dependency_type}`);
       }
-      return { project_id, dependency_type } as structures.Dependency;
+      return { project_id, dependency_type } as defs.Dependency;
     }),
   gameVersions: async () => {
-    const minecraftVersions = await utils.getMcVersions();
+    const minecraftVersions = await getMcVersions();
     return utils
       .parseList(core.getInput("game_versions"))
       .map((game_version) => {
@@ -78,42 +78,53 @@ export const INPUTS = lib.lazy({
   },
   versionType: () => {
     const versionType = core.getInput("version_type");
-    if (!(versionType in structures.VERSION_TYPES)) {
-      throw Error(`Invalid version type: ${versionType}, expected one of ${structures.VERSION_TYPES.join(", ")}`);
+    if (!utils.isIn(defs.VERSION_TYPES, versionType)) {
+      throw Error(`Invalid version type: ${versionType}, expected one of ${defs.VERSION_TYPES.join(", ")}`);
     }
-    return versionType as structures.VersionType;
+    return versionType as defs.VersionType;
   },
   loaders: () => {
     const loaders = utils.parseList(core.getInput("loaders"));
     loaders.forEach((loader) => {
-      if (!(loader in structures.LOADERS)) {
-        throw Error(`Invalid loader: ${loader}, expected one of ${structures.LOADERS.join(", ")}`);
+      if (!utils.isIn(defs.LOADERS, loader)) {
+        throw Error(`Invalid loader: ${loader}, expected one of ${defs.LOADERS.join(", ")}`);
       }
     });
-    return loaders as structures.Loader[];
+    return loaders as defs.Loader[];
   },
   featured: () => core.getBooleanInput("featured"),
   status: () => {
     const status = core.getInput("status");
-    if (!(status in structures.STATUSES)) {
-      throw Error(`Invalid status: ${status}, expected one of ${structures.STATUSES.join(", ")}`);
+    if (!utils.isIn(defs.STATUSES, status)) {
+      throw Error(`Invalid status: ${status}, expected one of ${defs.STATUSES.join(", ")}`);
     }
-    return status as structures.Status;
+    return status as defs.Status;
   },
   requestedStatus: () => {
     const requestedStatus = core.getInput("requested_status");
-    if (!(requestedStatus in structures.REQUESTED_STATUSES)) {
+    if (!utils.isIn(defs.REQUESTED_STATUSES, requestedStatus)) {
       throw Error(
-        `Invalid requested status: ${requestedStatus}, expected one of ${structures.REQUESTED_STATUSES.join(", ")}`
+        `Invalid requested status: ${requestedStatus}, expected one of ${defs.REQUESTED_STATUSES.join(", ")}`
       );
     }
-    return requestedStatus as structures.RequestedStatus;
+    return requestedStatus as defs.RequestedStatus;
   },
   uploadMode: () => {
     const uploadMode = core.getInput("upload_mode");
-    if (!(uploadMode in structures.UPLOAD_MODES)) {
-      throw Error(`Invalid upload mode: ${uploadMode}, expected one of ${structures.UPLOAD_MODES.join(", ")}`);
+    if (!utils.isIn(defs.UPLOAD_MODES, uploadMode)) {
+      throw Error(`Invalid upload mode: ${uploadMode}, expected one of ${defs.UPLOAD_MODES.join(", ")}`);
     }
-    return uploadMode as structures.UploadMode;
+    return uploadMode as defs.UploadMode;
   },
 });
+
+export async function getMcVersions() {
+  return await fetch(VERSION_MANIFEST_URL).then(async (res: Response) => {
+    if (!res.ok) throw Error(`${res.status}: ${res.body}`);
+    const json: { versions: { type: string; id: string }[] } = await res.json();
+    return json.versions
+      .filter((it: { type: string }) => it.type === "release")
+      .map((it: { id: string }) => it.id)
+      .reverse();
+  });
+}
