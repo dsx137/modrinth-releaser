@@ -34962,15 +34962,13 @@ function fetchToModrinth(method, path, headers = {}, body = undefined) {
 /* harmony export */   "$q": () => (/* binding */ matchFiles),
 /* harmony export */   "Bx": () => (/* binding */ parseList),
 /* harmony export */   "DM": () => (/* binding */ trimObject),
-/* harmony export */   "d7": () => (/* binding */ getMcVersions),
+/* harmony export */   "Hi": () => (/* binding */ isIn),
 /* harmony export */   "iV": () => (/* binding */ parsePair),
 /* harmony export */   "kK": () => (/* binding */ isNil)
 /* harmony export */ });
 /* unused harmony exports isEmpty, isNilOrEmpty */
 /* harmony import */ var _actions_glob__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2540);
 /* harmony import */ var _actions_glob__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_glob__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _values__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(7879);
-
 
 function isNil(it) {
     return it === null || it === undefined;
@@ -34980,6 +34978,9 @@ function isEmpty(it) {
 }
 function isNilOrEmpty(it) {
     return isNil(it) || (typeof it === "string" && isEmpty(it));
+}
+function isIn(l, it) {
+    return l.includes(it);
 }
 function parsePair(pair) {
     const parts = pair.split(":").map((it) => it.trim());
@@ -35018,17 +35019,6 @@ async function matchFiles(patterns) {
     const files = await globber.glob();
     return files;
 }
-async function getMcVersions() {
-    return await fetch(_values__WEBPACK_IMPORTED_MODULE_1__/* .VERSION_MANIFEST_URL */ .Ow).then(async (res) => {
-        if (!res.ok)
-            throw Error(`${res.status}: ${res.body}`);
-        const json = await res.json();
-        return json.versions
-            .filter((it) => it.type === "release")
-            .map((it) => it.id)
-            .reverse();
-    });
-}
 
 
 /***/ }),
@@ -35042,9 +35032,10 @@ __nccwpck_require__.d(__webpack_exports__, {
   "E0": () => (/* binding */ API_TOKEN),
   "AM": () => (/* binding */ INPUTS),
   "Dm": () => (/* binding */ MODRINTH_API),
-  "yZ": () => (/* binding */ USER_AGENT),
-  "Ow": () => (/* binding */ VERSION_MANIFEST_URL)
+  "yZ": () => (/* binding */ USER_AGENT)
 });
+
+// UNUSED EXPORTS: VERSION_MANIFEST_URL, getMcVersions
 
 // EXTERNAL MODULE: external "fs"
 var external_fs_ = __nccwpck_require__(7147);
@@ -35123,13 +35114,13 @@ const INPUTS = lazy({
     },
     dependencies: () => utils/* parseList */.Bx(core.getInput("dependencies")).map((dep) => {
         const [project_id, dependency_type] = utils/* parsePair */.iV(dep);
-        if (!(dependency_type in DEPENDENCY_TYPES)) {
+        if (!utils/* isIn */.Hi(DEPENDENCY_TYPES, dependency_type)) {
             throw Error(`Invalid dependency type: ${dependency_type}`);
         }
         return { project_id, dependency_type };
     }),
     gameVersions: async () => {
-        const minecraftVersions = await utils/* getMcVersions */.d7();
+        const minecraftVersions = await getMcVersions();
         return utils/* parseList */.Bx(core.getInput("game_versions"))
             .map((game_version) => {
             if (game_version.split(":").length === 1) {
@@ -35155,7 +35146,7 @@ const INPUTS = lazy({
     },
     versionType: () => {
         const versionType = core.getInput("version_type");
-        if (!(versionType in VERSION_TYPES)) {
+        if (!utils/* isIn */.Hi(VERSION_TYPES, versionType)) {
             throw Error(`Invalid version type: ${versionType}, expected one of ${VERSION_TYPES.join(", ")}`);
         }
         return versionType;
@@ -35163,7 +35154,7 @@ const INPUTS = lazy({
     loaders: () => {
         const loaders = utils/* parseList */.Bx(core.getInput("loaders"));
         loaders.forEach((loader) => {
-            if (!(loader in LOADERS)) {
+            if (!utils/* isIn */.Hi(LOADERS, loader)) {
                 throw Error(`Invalid loader: ${loader}, expected one of ${LOADERS.join(", ")}`);
             }
         });
@@ -35172,26 +35163,37 @@ const INPUTS = lazy({
     featured: () => core.getBooleanInput("featured"),
     status: () => {
         const status = core.getInput("status");
-        if (!(status in STATUSES)) {
+        if (!utils/* isIn */.Hi(STATUSES, status)) {
             throw Error(`Invalid status: ${status}, expected one of ${STATUSES.join(", ")}`);
         }
         return status;
     },
     requestedStatus: () => {
         const requestedStatus = core.getInput("requested_status");
-        if (!(requestedStatus in REQUESTED_STATUSES)) {
+        if (!utils/* isIn */.Hi(REQUESTED_STATUSES, requestedStatus)) {
             throw Error(`Invalid requested status: ${requestedStatus}, expected one of ${REQUESTED_STATUSES.join(", ")}`);
         }
         return requestedStatus;
     },
     uploadMode: () => {
         const uploadMode = core.getInput("upload_mode");
-        if (!(uploadMode in UPLOAD_MODES)) {
+        if (!utils/* isIn */.Hi(UPLOAD_MODES, uploadMode)) {
             throw Error(`Invalid upload mode: ${uploadMode}, expected one of ${UPLOAD_MODES.join(", ")}`);
         }
         return uploadMode;
     },
 });
+async function getMcVersions() {
+    return await fetch(VERSION_MANIFEST_URL).then(async (res) => {
+        if (!res.ok)
+            throw Error(`${res.status}: ${res.body}`);
+        const json = await res.json();
+        return json.versions
+            .filter((it) => it.type === "release")
+            .map((it) => it.id)
+            .reverse();
+    });
+}
 
 
 /***/ }),
