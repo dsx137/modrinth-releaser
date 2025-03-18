@@ -9,7 +9,7 @@ import * as net from "./net";
 
 async function listVersions(projectId: string) {
   return await net.fetchToModrinth("GET", `/project/${projectId}/version`).then(async (res) => {
-    if (!res.ok) throw Error(`${res.status}: ${res.body}`);
+    if (!res.ok) throw Error(`${res.status}: ${await res.json()}`);
     return (await res.json()) as defs.Version[];
   });
 }
@@ -24,7 +24,7 @@ async function createVersion(data: defs.DataRequestCreateVersion, files: defs.Fi
   });
 
   await net.fetchToModrinth("POST", `/version`, form.getHeaders(), form).then(async (res) => {
-    if (!res.ok) throw Error(`${res.status}: ${res.body}`);
+    if (!res.ok) throw Error(`${res.status}: ${await res.json()}`);
     core.info("Version created successfully!");
   });
 }
@@ -34,7 +34,7 @@ async function modifyVersion(versionId: string, data: defs.DataRequestModifyVers
   await net
     .fetchToModrinth("PATCH", `/version/${versionId}`, { "Content-Type": "application/json" }, JSON.stringify(data))
     .then(async (res) => {
-      if (!res.ok) throw Error(`${res.status}: ${res.body}`);
+      if (!res.ok) throw Error(`${res.status}: ${await res.json()}`);
       core.info("Version modified successfully!");
     });
 }
@@ -49,14 +49,14 @@ async function addFilesToVersion(versionId: string, files: defs.File[]) {
 
   core.info("Uploading new files...");
   await net.fetchToModrinth("POST", `/version/${versionId}/file`, form.getHeaders(), form).then(async (res) => {
-    if (!res.ok) throw Error(`${res.status}: ${res.body}`);
+    if (!res.ok) throw Error(`${res.status}: ${await res.json()}`);
     core.info("Files added successfully!");
   });
 }
 
 async function deleteVersionFile(file: defs.VersionFile) {
   await net.fetchToModrinth("DELETE", `/version_file/${file.hashes.sha512}`).then(async (res) => {
-    if (!res.ok) throw Error(`${res.status}: ${res.body}`);
+    if (!res.ok) throw Error(`${res.status}: ${await res.json()}`);
     core.info("File deleted: " + file.filename);
   });
 }

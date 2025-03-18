@@ -34818,7 +34818,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 async function listVersions(projectId) {
     return await _net__WEBPACK_IMPORTED_MODULE_5__/* .fetchToModrinth */ .v("GET", `/project/${projectId}/version`).then(async (res) => {
         if (!res.ok)
-            throw Error(`${res.status}: ${res.body}`);
+            throw Error(`${res.status}: ${await res.json()}`);
         return (await res.json());
     });
 }
@@ -34831,7 +34831,7 @@ async function createVersion(data, files) {
     });
     await _net__WEBPACK_IMPORTED_MODULE_5__/* .fetchToModrinth */ .v("POST", `/version`, form.getHeaders(), form).then(async (res) => {
         if (!res.ok)
-            throw Error(`${res.status}: ${res.body}`);
+            throw Error(`${res.status}: ${await res.json()}`);
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Version created successfully!");
     });
 }
@@ -34840,7 +34840,7 @@ async function modifyVersion(versionId, data) {
     await _net__WEBPACK_IMPORTED_MODULE_5__/* .fetchToModrinth */ .v("PATCH", `/version/${versionId}`, { "Content-Type": "application/json" }, JSON.stringify(data))
         .then(async (res) => {
         if (!res.ok)
-            throw Error(`${res.status}: ${res.body}`);
+            throw Error(`${res.status}: ${await res.json()}`);
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Version modified successfully!");
     });
 }
@@ -34854,14 +34854,14 @@ async function addFilesToVersion(versionId, files) {
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Uploading new files...");
     await _net__WEBPACK_IMPORTED_MODULE_5__/* .fetchToModrinth */ .v("POST", `/version/${versionId}/file`, form.getHeaders(), form).then(async (res) => {
         if (!res.ok)
-            throw Error(`${res.status}: ${res.body}`);
+            throw Error(`${res.status}: ${await res.json()}`);
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Files added successfully!");
     });
 }
 async function deleteVersionFile(file) {
     await _net__WEBPACK_IMPORTED_MODULE_5__/* .fetchToModrinth */ .v("DELETE", `/version_file/${file.hashes.sha512}`).then(async (res) => {
         if (!res.ok)
-            throw Error(`${res.status}: ${res.body}`);
+            throw Error(`${res.status}: ${await res.json()}`);
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("File deleted: " + file.filename);
     });
 }
@@ -35186,7 +35186,7 @@ const INPUTS = lazy({
 async function getMcVersions() {
     return await fetch(VERSION_MANIFEST_URL).then(async (res) => {
         if (!res.ok)
-            throw Error(`${res.status}: ${res.body}`);
+            throw Error(`${res.status}: ${await res.json()}`);
         const json = await res.json();
         return json.versions
             .filter((it) => it.type === "release")
