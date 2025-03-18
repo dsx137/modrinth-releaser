@@ -22,9 +22,9 @@ jobs:
       - name: Update Snapshot Release
         uses: andelf/nightly-release@main
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           tag_name: "nightly"
           name: "nightly-$$-${{ github.run_id }}"
           prerelease: true
-          body: ${{ github.event.head_commit.message }}
+          body: "${{ github.event.head_commit.message }}"
