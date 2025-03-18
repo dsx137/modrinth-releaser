@@ -47,7 +47,7 @@ inputs:
   requested_status:
     description: "The requested status of this version."
     required: false
-    defaultt: "listed"
+    default: "listed"
   upload_mode:
     description: "How will be the version uploaded."
     required: false
