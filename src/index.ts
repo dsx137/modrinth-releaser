@@ -7,8 +7,8 @@ import * as values from "./values";
 import * as defs from "./defs";
 import * as net from "./net";
 
-async function listVersions() {
-  return await net.fetchToModrinth("GET", `/project/${values.INPUTS.projectId}/version`).then(async (res) => {
+async function listVersions(projectId: string) {
+  return await net.fetchToModrinth("GET", `/project/${projectId}/version`).then(async (res) => {
     if (!res.ok) throw Error(`${res.status}: ${res.body}`);
     return (await res.json()) as defs.Version[];
   });
@@ -81,7 +81,7 @@ async function main() {
 
   core.info(`Files to upload: \n\t${file_parts.join("\n\t")}\n`);
 
-  const version = await listVersions().then((versions) =>
+  const version = await listVersions(values.INPUTS.projectId).then((versions) =>
     versions.find((version) => version.version_number === values.INPUTS.versionNumber)
   );
   if (utils.isNil(version)) {

@@ -8,7 +8,7 @@ import * as utils from "./utils";
 
 // 常量
 export const VERSION_MANIFEST_URL = "https://launchermeta.mojang.com/mc/game/version_manifest.json";
-export const MODRINTH_API = "https://api.modrinth.com/v1";
+export const MODRINTH_API = "https://api.modrinth.com/v2";
 
 // 环境变量和上下文
 export const API_TOKEN = process.env.MODRINTH_TOKEN;
