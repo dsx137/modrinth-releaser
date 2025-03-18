@@ -119,7 +119,9 @@ async function main() {
   }
 }
 
-main().catch((error) => {
-  core.setFailed(error.message);
-  process.exit(1);
-});
+await main()
+  .then(() => core.info("Done!"))
+  .catch((error) => {
+    core.setFailed(error.message);
+    process.exit(1);
+  });

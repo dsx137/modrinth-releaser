@@ -1,5 +1,3 @@
-import { exitCode } from "process";
-
 export const DEPENDENCY_TYPES = ["required", "optional", "incompatible", "embedded"] as const;
 export const REQUESTED_STATUSES = ["listed", "archived", "draft", "unlisted"] as const;
 export const STATUSES = ["listed", "archived", "draft", "unlisted", "scheduled", "unknown"] as const;
