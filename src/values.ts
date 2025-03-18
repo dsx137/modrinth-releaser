@@ -120,7 +120,7 @@ export const INPUTS = lib.lazy({
 
 export async function getMcVersions() {
   return await fetch(VERSION_MANIFEST_URL).then(async (res: Response) => {
-    if (!res.ok) throw Error(`${res.status}: ${await res.json()}`);
+    if (!res.ok) throw Error(`${res.status}: ${await res.text()}`);
     const json: { versions: { type: string; id: string }[] } = await res.json();
     return json.versions
       .filter((it: { type: string }) => it.type === "release")
