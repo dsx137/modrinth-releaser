@@ -1,0 +1,39 @@
+name: snapshot
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  relese:
+    concurrency:
+      group: release
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "21"
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get package version
+        id: get_version
+        run: echo "::set-output name=version::$(node -p -e \"require('./package.json').version\")"
+
+      - name: Update Snapshot Release
+        uses: andelf/nightly-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: "${{ steps.get_version.outputs.version }}"
+          name: "${{ steps.get_version.outputs.version }}"
+          prerelease: false
+          body: ${{ github.event.head_commit.message }}

@@ -1,11 +1,11 @@
 {
-  "name": "modrinth-release-action",
+  "name": "modrinth-releaser",
   "version": "1.0.2",
   "description": "Release versions to Modrinth with github actions!",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "ncc build src/index.js --license LICENSE",
+    "build": "ncc build src/index.ts --license LICENSE",
     "lint": "eslint index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,16 +17,14 @@
     "@actions/github": "^6.0.0",
     "@actions/glob": "^0.4.0",
     "form-data": "^4.0.0",
-    "lodash": "^4.17.21",
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
-    "@types/lodash": "^4.17.16",
     "@types/node": "^20.5.1",
     "@typescript-eslint/eslint-plugin": "^6.4.1",
     "@typescript-eslint/parser": "^6.4.1",
     "esbuild": "^0.25.1",
     "eslint": "^8.47.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.8.2"
   }
 }

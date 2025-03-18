@@ -28,23 +28,29 @@ export function parseList(list: string) {
     .filter((it: string) => it);
 }
 
-export function trimObject<T extends object>(obj: T, seen = new WeakSet()): T {
+export function trimObject<T extends { [key: string | number | symbol]: unknown }>(
+  obj: T,
+  seen = new WeakSet()
+): { [K in keyof T]: T[K] } {
   if (seen.has(obj)) return obj;
   seen.add(obj);
 
-  const ret = {};
+  const ret = {} as T;
 
-  Object.keys(obj).forEach((key) => {
-    if (isNilOrEmpty(obj[key])) return;
+  for (const [k, v] of Object.keys(obj).entries()) {
+    if (isNilOrEmpty(v)) break;
 
-    if (typeof obj[key] === "object") {
-      const trimmed = trimObject(obj[key], seen);
-      if (isNilOrEmpty(trimmed)) return;
-      ret[key] = trimmed;
+    if (typeof v !== "object") {
+      ret[k] = v;
+      break;
     }
-  });
 
-  return ret as T;
+    const trimmed = trimObject(v, seen);
+    if (isNilOrEmpty(trimmed)) break;
+    ret[k] = trimmed;
+  }
+
+  return ret;
 }
 
 export async function matchFiles(patterns: string[]): Promise<string[]> {
