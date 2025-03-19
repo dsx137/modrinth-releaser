@@ -12,8 +12,7 @@
       loaders: forge, fabric
       game_versions: 1.20.1:1.20.2
       version_number: 1.1.0
-      files: |
-          ./build/libs/*-all.jar
+      files: ./build/libs/*-all.jar
 ```
 
 ```yml
@@ -30,6 +29,7 @@
       version_number: 1.1.0
       files: |
           ./build/libs/*-all.jar
+          xxx.jar
       dependencies: Vl1uNAuy:required, ordsPcFz:required
       changelog: some message # or file path. the file path enjoys a higher priority.
       version_type: release # or beta, alpha
