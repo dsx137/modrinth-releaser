@@ -39590,7 +39590,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 
 
 async function findVersion(projectId, versionNumber) {
-    return _actions_core__WEBPACK_IMPORTED_MODULE_1___default().group("🔍 Find version", async () => {
+    return _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("🔍 Find version", async () => {
         return await _net__WEBPACK_IMPORTED_MODULE_5__/* .fetchToModrinth */ .v("GET", `/project/${projectId}/version`)
             .then(async (res) => {
             if (!res.ok)
@@ -39601,31 +39601,31 @@ async function findVersion(projectId, versionNumber) {
     });
 }
 async function createVersion(data, files) {
-    await _actions_core__WEBPACK_IMPORTED_MODULE_1___default().group(`🆕 Create version with ${files.length} files`, async () => {
-        _actions_core__WEBPACK_IMPORTED_MODULE_1___default().info(`Files to upload: \n\t${files.map((it) => it.name).join("\n\t")}`);
+    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group(`🆕 Create version with ${files.length} files`, async () => {
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Files to upload: \n\t${files.map((it) => it.name).join("\n\t")}`);
         const form = new (form_data__WEBPACK_IMPORTED_MODULE_0___default())();
         form.append("data", JSON.stringify(data));
-        files.forEach((file) => form.append(file.name, fs__WEBPACK_IMPORTED_MODULE_2___default().createReadStream(file.path)));
+        files.forEach((file) => form.append(file.name, fs__WEBPACK_IMPORTED_MODULE_2__.createReadStream(file.path)));
         await _net__WEBPACK_IMPORTED_MODULE_5__/* .fetchToModrinth */ .v("POST", `/version`, form.getHeaders(), form).then(async (res) => {
             if (!res.ok)
                 throw Error(`${res.status}: ${await res.text()}`);
-            _actions_core__WEBPACK_IMPORTED_MODULE_1___default().info("Version created successfully!");
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Version created successfully!");
         });
     });
 }
 async function modifyVersion(versionId, data) {
-    await _actions_core__WEBPACK_IMPORTED_MODULE_1___default().group(`🔄 Modify version ${versionId}`, async () => {
+    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group(`🔄 Modify version ${versionId}`, async () => {
         await _net__WEBPACK_IMPORTED_MODULE_5__/* .fetchToModrinth */ .v("PATCH", `/version/${versionId}`, { "Content-Type": "application/json" }, JSON.stringify(data))
             .then(async (res) => {
             if (!res.ok)
                 throw Error(`${res.status}: ${await res.text()}`);
-            _actions_core__WEBPACK_IMPORTED_MODULE_1___default().info("Version modified successfully!");
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Version modified successfully!");
         });
     });
 }
 async function addFilesToVersion(versionId, files) {
-    await _actions_core__WEBPACK_IMPORTED_MODULE_1___default().group(`📤 Add ${files.length} files to version`, async () => {
-        _actions_core__WEBPACK_IMPORTED_MODULE_1___default().info(`Files to upload: \n\t${files.map((it) => it.name).join("\n\t")}`);
+    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group(`📤 Add ${files.length} files to version`, async () => {
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Files to upload: \n\t${files.map((it) => it.name).join("\n\t")}`);
         const file_parts = files.map((it) => it.name);
         const form = new (form_data__WEBPACK_IMPORTED_MODULE_0___default())();
         form.append("data", JSON.stringify({
@@ -39643,21 +39643,21 @@ async function addFilesToVersion(versionId, files) {
             }),
             file_parts,
         }));
-        files.forEach((file) => form.append(file.name, fs__WEBPACK_IMPORTED_MODULE_2___default().createReadStream(file.path)));
-        _actions_core__WEBPACK_IMPORTED_MODULE_1___default().info("Uploading new files...");
+        files.forEach((file) => form.append(file.name, fs__WEBPACK_IMPORTED_MODULE_2__.createReadStream(file.path)));
+        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Uploading new files...");
         await _net__WEBPACK_IMPORTED_MODULE_5__/* .fetchToModrinth */ .v("POST", `/version/${versionId}/file`, form.getHeaders(), form).then(async (res) => {
             if (!res.ok)
                 throw Error(`${res.status}: ${await res.text()}`);
-            _actions_core__WEBPACK_IMPORTED_MODULE_1___default().info("Files added successfully!");
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Files added successfully!");
         });
     });
 }
 async function deleteVersionFiles(files) {
-    await _actions_core__WEBPACK_IMPORTED_MODULE_1___default().group(`🗑️ Delete ${files.length} version files`, async () => {
+    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group(`🗑️ Delete ${files.length} version files`, async () => {
         await Promise.all(files.map(async (file) => await _net__WEBPACK_IMPORTED_MODULE_5__/* .fetchToModrinth */ .v("DELETE", `/version_file/${file.hashes.sha512}`).then(async (res) => {
             if (!res.ok)
                 throw Error(`${res.status}: ${await res.text()}`);
-            _actions_core__WEBPACK_IMPORTED_MODULE_1___default().info("File deleted: " + file.filename);
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("File deleted: " + file.filename);
         })));
     });
 }
@@ -39683,7 +39683,7 @@ async function main() {
     }
     switch (uploadMode.mode) {
         case "normal":
-            _actions_core__WEBPACK_IMPORTED_MODULE_1___default().notice("Version already exists. Skipping...");
+            _actions_core__WEBPACK_IMPORTED_MODULE_1__.notice("Version already exists. Skipping...");
             break;
         case "update":
             await modifyVersion(version.id, baseData);
@@ -39691,15 +39691,15 @@ async function main() {
             switch (uploadMode.addition) {
                 case "replace":
                     if (version.files.length === 0) {
-                        _actions_core__WEBPACK_IMPORTED_MODULE_1___default().info("No files to replace.");
+                        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("No files to replace.");
                     }
                     else {
-                        _actions_core__WEBPACK_IMPORTED_MODULE_1___default().info("Deleting old files...");
+                        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Deleting old files...");
                         await deleteVersionFiles(version.files);
                     }
                     break;
                 case "keep":
-                    _actions_core__WEBPACK_IMPORTED_MODULE_1___default().info("Old files will be kept.");
+                    _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Old files will be kept.");
                     break;
                 default:
                     throw Error(`Invalid upload mode addition: ${uploadMode.addition}`);
@@ -39709,11 +39709,11 @@ async function main() {
             throw Error(`Invalid upload mode: ${uploadMode.mode}`);
     }
 }
-_actions_core__WEBPACK_IMPORTED_MODULE_1___default().info("");
+_actions_core__WEBPACK_IMPORTED_MODULE_1__.info("");
 await main()
-    .then(() => _actions_core__WEBPACK_IMPORTED_MODULE_1___default().info("✅️ Done!"))
+    .then(() => _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("✅️ Done!"))
     .catch((error) => {
-    _actions_core__WEBPACK_IMPORTED_MODULE_1___default().setFailed("❌️ " + _utils__WEBPACK_IMPORTED_MODULE_3__/* .getError */ .by(error));
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed("❌️ " + _utils__WEBPACK_IMPORTED_MODULE_3__/* .getError */ .by(error));
     process.exit(1);
 });
 
@@ -41974,7 +41974,7 @@ function trimObject(obj, seen = new WeakSet()) {
     return ret;
 }
 async function matchFiles(patterns) {
-    const globber = await _actions_glob__WEBPACK_IMPORTED_MODULE_0___default().create(patterns.join("\n"));
+    const globber = await _actions_glob__WEBPACK_IMPORTED_MODULE_0__.create(patterns.join("\n"));
     const files = await globber.glob();
     return files;
 }
@@ -41997,13 +41997,10 @@ __nccwpck_require__.d(__webpack_exports__, {
 
 // EXTERNAL MODULE: external "fs"
 var external_fs_ = __nccwpck_require__(7147);
-var external_fs_default = /*#__PURE__*/__nccwpck_require__.n(external_fs_);
 // EXTERNAL MODULE: external "path"
 var external_path_ = __nccwpck_require__(1017);
-var external_path_default = /*#__PURE__*/__nccwpck_require__.n(external_path_);
 // EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(872);
-var core_default = /*#__PURE__*/__nccwpck_require__.n(core);
 // EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
 var github = __nccwpck_require__(214);
 ;// CONCATENATED MODULE: ./src/lib.ts
@@ -42072,36 +42069,36 @@ const API_TOKEN = process.env.MODRINTH_TOKEN ?? "";
 const USER_AGENT = `${github.context.repo.owner}/${github.context.repo.repo}/${github.context.sha}`;
 // 从输入中获取的值
 const INPUTS = lazy({
-    projectId: () => core_default().getInput("project_id"),
-    versionNumber: () => core_default().getInput("version_number"),
-    files: async () => await utils/* matchFiles */.$q(core_default().getInput("files")
+    projectId: () => core.getInput("project_id"),
+    versionNumber: () => core.getInput("version_number"),
+    files: async () => await utils/* matchFiles */.$q(core.getInput("files")
         .split(/\r?\n/)
         .flatMap((line) => utils/* parseList */.Bx(line))
         .filter((pattern) => pattern))
         .then((files) => {
         return files.map((file) => {
-            return { name: external_path_default().basename(file), path: file };
+            return { name: external_path_.basename(file), path: file };
         });
     }),
-    name: () => core_default().getInput("name"),
+    name: () => core.getInput("name"),
     changelog: () => {
-        let changelog = core_default().getInput("changelog");
-        if (external_fs_default().existsSync(changelog)) {
+        let changelog = core.getInput("changelog");
+        if (external_fs_.existsSync(changelog)) {
             try {
-                changelog = external_fs_default().readFileSync(changelog, "utf-8");
-                core_default().notice("Changelog source: file");
+                changelog = external_fs_.readFileSync(changelog, "utf-8");
+                core.notice("Changelog source: file");
             }
             catch (error) {
-                core_default().warning(`Failed to read changelog file: ${utils/* getError */.by(error)}`);
-                core_default().notice("Changelog source: input");
+                core.warning(`Failed to read changelog file: ${utils/* getError */.by(error)}`);
+                core.notice("Changelog source: input");
             }
         }
         else {
-            core_default().notice("Changelog source: input");
+            core.notice("Changelog source: input");
         }
         return changelog;
     },
-    dependencies: () => utils/* parseList */.Bx(core_default().getInput("dependencies")).map((dep) => {
+    dependencies: () => utils/* parseList */.Bx(core.getInput("dependencies")).map((dep) => {
         const [project_id, dependency_type] = utils/* parsePair */.iV(dep);
         if (!utils/* isIn */.Hi(DEPENDENCY_TYPES, dependency_type)) {
             throw Error(`Invalid dependency type: ${dependency_type}`);
@@ -42110,7 +42107,7 @@ const INPUTS = lazy({
     }),
     gameVersions: async () => {
         const minecraftVersions = await net/* getMcVersions */.d();
-        return utils/* parseList */.Bx(core_default().getInput("game_versions"))
+        return utils/* parseList */.Bx(core.getInput("game_versions"))
             .map((game_version) => {
             if (game_version.split(":").length === 1) {
                 const index = minecraftVersions.indexOf(game_version);
@@ -42134,14 +42131,14 @@ const INPUTS = lazy({
             .flat();
     },
     versionType: () => {
-        const versionType = core_default().getInput("version_type");
+        const versionType = core.getInput("version_type");
         if (!utils/* isIn */.Hi(VERSION_TYPES, versionType)) {
             throw Error(`Invalid version type: ${versionType}, expected one of ${VERSION_TYPES.join(", ")}`);
         }
         return versionType;
     },
     loaders: () => {
-        const loaders = utils/* parseList */.Bx(core_default().getInput("loaders"));
+        const loaders = utils/* parseList */.Bx(core.getInput("loaders"));
         loaders.forEach((loader) => {
             if (!utils/* isIn */.Hi(LOADERS, loader)) {
                 throw Error(`Invalid loader: ${loader}, expected one of ${LOADERS.join(", ")}`);
@@ -42149,23 +42146,23 @@ const INPUTS = lazy({
         });
         return loaders;
     },
-    featured: () => core_default().getBooleanInput("featured"),
+    featured: () => core.getBooleanInput("featured"),
     status: () => {
-        const status = core_default().getInput("status");
+        const status = core.getInput("status");
         if (!utils/* isIn */.Hi(STATUSES, status)) {
             throw Error(`Invalid status: ${status}, expected one of ${STATUSES.join(", ")}`);
         }
         return status;
     },
     requestedStatus: () => {
-        const requestedStatus = core_default().getInput("requested_status");
+        const requestedStatus = core.getInput("requested_status");
         if (!utils/* isIn */.Hi(REQUESTED_STATUSES, requestedStatus)) {
             throw Error(`Invalid requested status: ${requestedStatus}, expected one of ${REQUESTED_STATUSES.join(", ")}`);
         }
         return requestedStatus;
     },
     uploadMode: () => {
-        const [mode, addition] = core_default().getInput("upload_mode")
+        const [mode, addition] = core.getInput("upload_mode")
             .split(":")
             .map((it) => it.trim());
         if (!(mode in UPLOAD_MODES)) {
