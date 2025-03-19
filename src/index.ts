@@ -1,68 +1,100 @@
 "use strict";
-import * as core from "@actions/core";
-import * as FormData from "form-data";
-import * as fs from "fs";
+import FormData from "form-data";
+import core from "@actions/core";
+import fs from "fs";
 import * as utils from "./utils";
 import * as values from "./values";
 import * as defs from "./defs";
 import * as net from "./net";
 
-async function listVersions(projectId: string) {
-  return await net.fetchToModrinth("GET", `/project/${projectId}/version`).then(async (res) => {
-    if (!res.ok) throw Error(`${res.status}: ${await res.text()}`);
-    return (await res.json()) as defs.Version[];
+export async function findVersion(projectId: string, versionNumber: string) {
+  return core.group("🔍 Find version", async () => {
+    return await net
+      .fetchToModrinth("GET", `/project/${projectId}/version`)
+      .then(async (res) => {
+        if (!res.ok) throw Error(`${res.status}: ${await res.text()}`);
+        return (await res.json()) as defs.Version[];
+      })
+      .then((versions) => versions.find((version) => version.version_number === versionNumber));
   });
 }
 
-async function createVersion(data: defs.DataRequestCreateVersion, files: defs.File[]) {
-  core.info("Creating new version...");
+export async function createVersion(data: defs.DataRequestCreateVersion, files: defs.File[]) {
+  await core.group(`🆕 Create version with ${files.length} files`, async () => {
+    core.info(`Files to upload: \n\t${files.map((it) => it.name).join("\n\t")}`);
 
-  const form = new FormData();
-  form.append("data", JSON.stringify(data));
-  files.forEach((file) => {
-    form.append(file.name, fs.createReadStream(file.path));
-  });
+    const form = new FormData();
+    form.append("data", JSON.stringify(data));
+    files.forEach((file) => form.append(file.name, fs.createReadStream(file.path)));
 
-  await net.fetchToModrinth("POST", `/version`, form.getHeaders(), form).then(async (res) => {
-    if (!res.ok) throw Error(`${res.status}: ${await res.text()}`);
-    core.info("Version created successfully!");
-  });
-}
-
-async function modifyVersion(versionId: string, data: defs.DataRequestModifyVersion) {
-  core.info("Modifying existing version...");
-  await net
-    .fetchToModrinth("PATCH", `/version/${versionId}`, { "Content-Type": "application/json" }, JSON.stringify(data))
-    .then(async (res) => {
+    await net.fetchToModrinth("POST", `/version`, form.getHeaders(), form).then(async (res) => {
       if (!res.ok) throw Error(`${res.status}: ${await res.text()}`);
-      core.info("Version modified successfully!");
+      core.info("Version created successfully!");
     });
-}
-
-async function addFilesToVersion(versionId: string, files: defs.File[]) {
-  core.info("Adding files to version...");
-  const form = new FormData();
-  // form.append("data", JSON.stringify({}));
-  files.forEach((file) => {
-    form.append(file.name, fs.createReadStream(file.path));
-  });
-
-  core.info("Uploading new files...");
-  await net.fetchToModrinth("POST", `/version/${versionId}/file`, form.getHeaders(), form).then(async (res) => {
-    if (!res.ok) throw Error(`${res.status}: ${await res.text()}`);
-    core.info("Files added successfully!");
   });
 }
 
-async function deleteVersionFile(file: defs.VersionFile) {
-  await net.fetchToModrinth("DELETE", `/version_file/${file.hashes.sha512}`).then(async (res) => {
-    if (!res.ok) throw Error(`${res.status}: ${await res.text()}`);
-    core.info("File deleted: " + file.filename);
+export async function modifyVersion(versionId: string, data: defs.DataRequestModifyVersion) {
+  await core.group(`🔄 Modify version ${versionId}`, async () => {
+    await net
+      .fetchToModrinth("PATCH", `/version/${versionId}`, { "Content-Type": "application/json" }, JSON.stringify(data))
+      .then(async (res) => {
+        if (!res.ok) throw Error(`${res.status}: ${await res.text()}`);
+        core.info("Version modified successfully!");
+      });
   });
 }
 
-async function main() {
-  // 基础数据
+export async function addFilesToVersion(versionId: string, files: defs.File[]) {
+  await core.group(`📤 Add ${files.length} files to version`, async () => {
+    core.info(`Files to upload: \n\t${files.map((it) => it.name).join("\n\t")}`);
+
+    const file_parts = files.map((it) => it.name);
+
+    const form = new FormData();
+    form.append(
+      "data",
+      JSON.stringify({
+        ...utils.trimObject({
+          name: values.INPUTS.name,
+          version_number: values.INPUTS.versionNumber,
+          changelog: values.INPUTS.changelog,
+          dependencies: values.INPUTS.dependencies,
+          game_versions: await values.INPUTS.gameVersions,
+          version_type: values.INPUTS.versionType,
+          loaders: values.INPUTS.loaders,
+          featured: values.INPUTS.featured,
+          status: values.INPUTS.status,
+          requested_status: values.INPUTS.requestedStatus,
+        }),
+        file_parts,
+      })
+    );
+    files.forEach((file) => form.append(file.name, fs.createReadStream(file.path)));
+
+    core.info("Uploading new files...");
+    await net.fetchToModrinth("POST", `/version/${versionId}/file`, form.getHeaders(), form).then(async (res) => {
+      if (!res.ok) throw Error(`${res.status}: ${await res.text()}`);
+      core.info("Files added successfully!");
+    });
+  });
+}
+
+export async function deleteVersionFiles(files: defs.VersionFile[]) {
+  await core.group(`🗑️ Delete ${files.length} version files`, async () => {
+    await Promise.all(
+      files.map(
+        async (file) =>
+          await net.fetchToModrinth("DELETE", `/version_file/${file.hashes.sha512}`).then(async (res) => {
+            if (!res.ok) throw Error(`${res.status}: ${await res.text()}`);
+            core.info("File deleted: " + file.filename);
+          })
+      )
+    );
+  });
+}
+
+export async function main() {
   const baseData = utils.trimObject({
     name: values.INPUTS.name,
     version_number: values.INPUTS.versionNumber,
@@ -77,51 +109,50 @@ async function main() {
   });
 
   const files = await values.INPUTS.files;
-  const file_parts = files.map((it) => it.name);
+  const uploadMode = values.INPUTS.uploadMode;
 
-  core.info(`Files to upload: \n\t${file_parts.join("\n\t")}\n`);
-
-  const version = await listVersions(values.INPUTS.projectId).then((versions) =>
-    versions.find((version) => version.version_number === values.INPUTS.versionNumber)
-  );
+  const version = await findVersion(values.INPUTS.projectId, values.INPUTS.versionNumber);
   if (utils.isNil(version)) {
-    await createVersion({ ...baseData, file_parts, project_id: values.INPUTS.projectId }, files);
+    await createVersion(
+      { ...baseData, file_parts: files.map((it) => it.name), project_id: values.INPUTS.projectId },
+      files
+    );
     return;
   }
 
-  if (values.INPUTS.uploadMode === "normal") {
-    core.info("Version already exists and updatable is false. Skipping...");
-    return;
-  }
+  switch (uploadMode.mode) {
+    case "normal":
+      core.notice("Version already exists. Skipping...");
+      break;
+    case "update":
+      await modifyVersion(version.id, baseData);
+      await addFilesToVersion(version.id, files);
 
-  const [uploadMode, uploadModeAddition] = utils.parsePair(values.INPUTS.uploadMode);
-
-  if (uploadMode === "update") {
-    await modifyVersion(version.id, baseData);
-    await addFilesToVersion(version.id, files);
-
-    switch (uploadModeAddition) {
-      case "replace":
-        if (version.files.length === 0) {
-          core.info("No files to replace.");
-        } else {
-          core.info("Deleting old files...");
-          version.files.forEach(async (file) => await deleteVersionFile(file));
-        }
-        break;
-      case "keep":
-        core.info("Old files will be kept.");
-        break;
-      default:
-        throw Error(`Invalid upload mode addition: ${uploadModeAddition}`);
-    }
-    return;
+      switch (uploadMode.addition) {
+        case "replace":
+          if (version.files.length === 0) {
+            core.info("No files to replace.");
+          } else {
+            core.info("Deleting old files...");
+            await deleteVersionFiles(version.files);
+          }
+          break;
+        case "keep":
+          core.info("Old files will be kept.");
+          break;
+        default:
+          throw Error(`Invalid upload mode addition: ${uploadMode.addition}`);
+      }
+      break;
+    default:
+      throw Error(`Invalid upload mode: ${uploadMode.mode}`);
   }
 }
 
+core.info("");
 await main()
-  .then(() => core.info("Done!"))
+  .then(() => core.info("✅️ Done!"))
   .catch((error) => {
-    core.setFailed(error.message);
+    core.setFailed("❌️ " + utils.getError(error));
     process.exit(1);
   });

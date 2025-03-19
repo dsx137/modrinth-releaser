@@ -1,7 +1,30 @@
 export const DEPENDENCY_TYPES = ["required", "optional", "incompatible", "embedded"] as const;
 export const REQUESTED_STATUSES = ["listed", "archived", "draft", "unlisted"] as const;
 export const STATUSES = ["listed", "archived", "draft", "unlisted", "scheduled", "unknown"] as const;
-export const LOADERS = ["fabric", "forge", "minecraft"] as const;
+export const LOADERS = [
+  "bukkit",
+  "bungeecord",
+  "canvas",
+  "datapack",
+  "fabric",
+  "folia",
+  "forge",
+  "iris",
+  "liteloader",
+  "minecraft",
+  "modloader",
+  "neoforge",
+  "optifine",
+  "paper",
+  "purpur",
+  "quilt",
+  "rift",
+  "spigot",
+  "sponge",
+  "vanilla",
+  "velocity",
+  "waterfall",
+] as const;
 export const VERSION_TYPES = ["release", "beta", "alpha"] as const;
 export const FILE_TYPES = ["required-resource-pack", "optional-resource-pack"] as const;
 export const ALGORITHMS = ["sha1", "sha512"] as const;
@@ -14,8 +37,14 @@ export type VersionType = (typeof VERSION_TYPES)[number];
 export type FileType = (typeof FILE_TYPES)[number];
 export type Algorithm = (typeof ALGORITHMS)[number];
 
-export const UPLOAD_MODES = ["normal", "update:keep", "update:replace"] as const;
-export type UploadMode = (typeof UPLOAD_MODES)[number];
+export const UPLOAD_MODES = { normal: [undefined], update: ["replace", "keep"] } as const;
+export type UploadModeType = keyof typeof UPLOAD_MODES;
+export type UploadModeAddition<T extends UploadModeType> = (typeof UPLOAD_MODES)[T][number];
+
+export type UploadMode<T extends UploadModeType = UploadModeType> = {
+  mode: T;
+  addition: UploadModeAddition<T>;
+};
 
 export interface File {
   name: string;
