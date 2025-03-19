@@ -1,6 +1,6 @@
-import fs from "fs";
-import path from "path";
-import core from "@actions/core";
+import * as fs from "fs";
+import * as path from "path";
+import * as core from "@actions/core";
 import * as github from "@actions/github";
 import * as lib from "./lib";
 import * as defs from "./defs";
