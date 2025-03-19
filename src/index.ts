@@ -121,7 +121,7 @@ export async function main() {
   }
 
   switch (uploadMode.mode) {
-    case "normal":
+    case "unique":
       core.notice("Version already exists. Skipping...");
       break;
     case "update":

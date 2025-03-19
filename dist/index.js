@@ -39590,7 +39590,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 
 
 async function findVersion(projectId, versionNumber) {
-    return _actions_core__WEBPACK_IMPORTED_MODULE_1__.group("🔍 Find version", async () => {
+    return _actions_core__WEBPACK_IMPORTED_MODULE_1__.group(`🔍 Find version [${versionNumber}]`, async () => {
         return await _net__WEBPACK_IMPORTED_MODULE_5__/* .fetchToModrinth */ .v("GET", `/project/${projectId}/version`)
             .then(async (res) => {
             if (!res.ok)
@@ -39601,7 +39601,7 @@ async function findVersion(projectId, versionNumber) {
     });
 }
 async function createVersion(data, files) {
-    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group(`🆕 Create version with ${files.length} files`, async () => {
+    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group(`🆕 Create version with [${files.length}] files`, async () => {
         _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Files to upload: \n\t${files.map((it) => it.name).join("\n\t")}`);
         const form = new (form_data__WEBPACK_IMPORTED_MODULE_0___default())();
         form.append("data", JSON.stringify(data));
@@ -39614,7 +39614,7 @@ async function createVersion(data, files) {
     });
 }
 async function modifyVersion(versionId, data) {
-    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group(`🔄 Modify version ${versionId}`, async () => {
+    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group(`🔄 Modify version [${versionId}]`, async () => {
         await _net__WEBPACK_IMPORTED_MODULE_5__/* .fetchToModrinth */ .v("PATCH", `/version/${versionId}`, { "Content-Type": "application/json" }, JSON.stringify(data))
             .then(async (res) => {
             if (!res.ok)
@@ -39624,7 +39624,7 @@ async function modifyVersion(versionId, data) {
     });
 }
 async function addFilesToVersion(versionId, files) {
-    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group(`📤 Add ${files.length} files to version`, async () => {
+    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group(`📤 Add [${files.length}] files to version`, async () => {
         _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Files to upload: \n\t${files.map((it) => it.name).join("\n\t")}`);
         const file_parts = files.map((it) => it.name);
         const form = new (form_data__WEBPACK_IMPORTED_MODULE_0___default())();
@@ -39653,7 +39653,7 @@ async function addFilesToVersion(versionId, files) {
     });
 }
 async function deleteVersionFiles(files) {
-    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group(`🗑️ Delete ${files.length} version files`, async () => {
+    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group(`🗑️ Delete [${files.length}] version files`, async () => {
         await Promise.all(files.map(async (file) => await _net__WEBPACK_IMPORTED_MODULE_5__/* .fetchToModrinth */ .v("DELETE", `/version_file/${file.hashes.sha512}`).then(async (res) => {
             if (!res.ok)
                 throw Error(`${res.status}: ${await res.text()}`);
@@ -39682,7 +39682,7 @@ async function main() {
         return;
     }
     switch (uploadMode.mode) {
-        case "normal":
+        case "unique":
             _actions_core__WEBPACK_IMPORTED_MODULE_1__.notice("Version already exists. Skipping...");
             break;
         case "update":
@@ -39691,15 +39691,14 @@ async function main() {
             switch (uploadMode.addition) {
                 case "replace":
                     if (version.files.length === 0) {
-                        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("No files to replace.");
+                        _actions_core__WEBPACK_IMPORTED_MODULE_1__.notice("No files to delete.");
                     }
                     else {
-                        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Deleting old files...");
                         await deleteVersionFiles(version.files);
                     }
                     break;
                 case "keep":
-                    _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Old files will be kept.");
+                    _actions_core__WEBPACK_IMPORTED_MODULE_1__.notice("Old files will be kept.");
                     break;
                 default:
                     throw Error(`Invalid upload mode addition: ${uploadMode.addition}`);
@@ -39709,7 +39708,6 @@ async function main() {
             throw Error(`Invalid upload mode: ${uploadMode.mode}`);
     }
 }
-_actions_core__WEBPACK_IMPORTED_MODULE_1__.info("");
 await main()
     .then(() => _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("✅️ Done!"))
     .catch((error) => {
@@ -42046,7 +42044,7 @@ const LOADERS = [
 const VERSION_TYPES = ["release", "beta", "alpha"];
 const FILE_TYPES = (/* unused pure expression or super */ null && (["required-resource-pack", "optional-resource-pack"]));
 const ALGORITHMS = (/* unused pure expression or super */ null && (["sha1", "sha512"]));
-const UPLOAD_MODES = { normal: [undefined], update: ["replace", "keep"] };
+const UPLOAD_MODES = { unique: [undefined], update: ["replace", "keep"] };
 
 // EXTERNAL MODULE: ./src/utils.ts
 var utils = __nccwpck_require__(2167);

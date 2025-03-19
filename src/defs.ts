@@ -37,7 +37,7 @@ export type VersionType = (typeof VERSION_TYPES)[number];
 export type FileType = (typeof FILE_TYPES)[number];
 export type Algorithm = (typeof ALGORITHMS)[number];
 
-export const UPLOAD_MODES = { normal: [undefined], update: ["replace", "keep"] } as const;
+export const UPLOAD_MODES = { unique: [undefined], update: ["replace", "keep"] } as const;
 export type UploadModeType = keyof typeof UPLOAD_MODES;
 export type UploadModeAddition<T extends UploadModeType> = (typeof UPLOAD_MODES)[T][number];
 
