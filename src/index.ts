@@ -8,7 +8,7 @@ import * as defs from "./defs";
 import * as net from "./net";
 
 export async function findVersion(projectId: string, versionNumber: string) {
-  return core.group("🔍 Find version", async () => {
+  return core.group(`🔍 Find version [${versionNumber}]`, async () => {
     return await net
       .fetchToModrinth("GET", `/project/${projectId}/version`)
       .then(async (res) => {
@@ -20,7 +20,7 @@ export async function findVersion(projectId: string, versionNumber: string) {
 }
 
 export async function createVersion(data: defs.DataRequestCreateVersion, files: defs.File[]) {
-  await core.group(`🆕 Create version with ${files.length} files`, async () => {
+  await core.group(`🆕 Create version with [${files.length}] files`, async () => {
     core.info(`Files to upload: \n\t${files.map((it) => it.name).join("\n\t")}`);
 
     const form = new FormData();
@@ -35,7 +35,7 @@ export async function createVersion(data: defs.DataRequestCreateVersion, files: 
 }
 
 export async function modifyVersion(versionId: string, data: defs.DataRequestModifyVersion) {
-  await core.group(`🔄 Modify version ${versionId}`, async () => {
+  await core.group(`🔄 Modify version [${versionId}]`, async () => {
     await net
       .fetchToModrinth("PATCH", `/version/${versionId}`, { "Content-Type": "application/json" }, JSON.stringify(data))
       .then(async (res) => {
@@ -46,7 +46,7 @@ export async function modifyVersion(versionId: string, data: defs.DataRequestMod
 }
 
 export async function addFilesToVersion(versionId: string, files: defs.File[]) {
-  await core.group(`📤 Add ${files.length} files to version`, async () => {
+  await core.group(`📤 Add [${files.length}] files to version`, async () => {
     core.info(`Files to upload: \n\t${files.map((it) => it.name).join("\n\t")}`);
 
     const file_parts = files.map((it) => it.name);
@@ -81,7 +81,7 @@ export async function addFilesToVersion(versionId: string, files: defs.File[]) {
 }
 
 export async function deleteVersionFiles(files: defs.VersionFile[]) {
-  await core.group(`🗑️ Delete ${files.length} version files`, async () => {
+  await core.group(`🗑️ Delete [${files.length}] version files`, async () => {
     await Promise.all(
       files.map(
         async (file) =>
@@ -131,14 +131,13 @@ export async function main() {
       switch (uploadMode.addition) {
         case "replace":
           if (version.files.length === 0) {
-            core.info("No files to replace.");
+            core.notice("No files to delete.");
           } else {
-            core.info("Deleting old files...");
             await deleteVersionFiles(version.files);
           }
           break;
         case "keep":
-          core.info("Old files will be kept.");
+          core.notice("Old files will be kept.");
           break;
         default:
           throw Error(`Invalid upload mode addition: ${uploadMode.addition}`);
@@ -149,7 +148,6 @@ export async function main() {
   }
 }
 
-core.info("");
 await main()
   .then(() => core.info("✅️ Done!"))
   .catch((error) => {
