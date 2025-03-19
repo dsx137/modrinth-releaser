@@ -1,17 +1,18 @@
-import * as fs from "fs";
-import * as path from "path";
-import * as core from "@actions/core";
-import * as github from "@actions/github";
+import fs from "fs";
+import path from "path";
+import core from "@actions/core";
+import github from "@actions/github";
 import * as lib from "./lib";
 import * as defs from "./defs";
 import * as utils from "./utils";
+import * as net from "./net";
 
 // 常量
 export const VERSION_MANIFEST_URL = "https://launchermeta.mojang.com/mc/game/version_manifest.json";
 export const MODRINTH_API = "https://api.modrinth.com/v2";
 
 // 环境变量和上下文
-export const API_TOKEN = process.env.MODRINTH_TOKEN;
+export const API_TOKEN = process.env.MODRINTH_TOKEN ?? "";
 export const USER_AGENT = `${github.context.repo.owner}/${github.context.repo.repo}/${github.context.sha}`;
 
 // 从输入中获取的值
@@ -39,11 +40,13 @@ export const INPUTS = lib.lazy({
     if (fs.existsSync(changelog)) {
       try {
         changelog = fs.readFileSync(changelog, "utf-8");
-      } catch {
-        core.warning(`Failed to read changelog file: ${changelog}`);
+        core.notice("Changelog source: file");
+      } catch (error) {
+        core.warning(`Failed to read changelog file: ${utils.getError(error)}`);
+        core.notice("Changelog source: input");
       }
     } else {
-      core.notice("Changelog file not found, fallback to given changelog");
+      core.notice("Changelog source: input");
     }
     return changelog;
   },
@@ -56,7 +59,7 @@ export const INPUTS = lib.lazy({
       return { project_id, dependency_type } as defs.Dependency;
     }),
   gameVersions: async () => {
-    const minecraftVersions = await getMcVersions();
+    const minecraftVersions = await net.getMcVersions();
     return utils
       .parseList(core.getInput("game_versions"))
       .map((game_version) => {
@@ -110,21 +113,17 @@ export const INPUTS = lib.lazy({
     return requestedStatus as defs.RequestedStatus;
   },
   uploadMode: () => {
-    const uploadMode = core.getInput("upload_mode");
-    if (!utils.isIn(defs.UPLOAD_MODES, uploadMode)) {
-      throw Error(`Invalid upload mode: ${uploadMode}, expected one of ${defs.UPLOAD_MODES.join(", ")}`);
+    const [mode, addition] = core
+      .getInput("upload_mode")
+      .split(":")
+      .map((it) => it.trim());
+    if (!(mode in defs.UPLOAD_MODES)) {
+      throw Error(`Invalid upload modeType: ${mode}, expected one of ${Object.keys(defs.UPLOAD_MODES).join(", ")}`);
     }
-    return uploadMode as defs.UploadMode;
+    const additions = defs.UPLOAD_MODES[mode as defs.UploadModeType];
+    if (!utils.isIn(additions, addition)) {
+      throw Error(`Invalid upload mode addition: ${addition}, expected one of ${additions.join(", ")}`);
+    }
+    return { mode, addition } as defs.UploadMode;
   },
 });
-
-export async function getMcVersions() {
-  return await fetch(VERSION_MANIFEST_URL).then(async (res: Response) => {
-    if (!res.ok) throw Error(`${res.status}: ${await res.text()}`);
-    const json: { versions: { type: string; id: string }[] } = await res.json();
-    return json.versions
-      .filter((it: { type: string }) => it.type === "release")
-      .map((it: { id: string }) => it.id)
-      .reverse();
-  });
-}
