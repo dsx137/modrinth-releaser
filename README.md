@@ -1,4 +1,4 @@
-# modrinth-release-action
+# modrinth-releaser
 
 ```yml
 # Simple
@@ -31,12 +31,10 @@
       files: |
           ./build/libs/*-all.jar
       dependencies: Vl1uNAuy:required, ordsPcFz:required
-      changelog: "some message"
-      changelog_file: /path/to/changelog.md # if not exist, will fallback to "changelog" property
+      changelog: some message # or file path. the file path enjoys a higher priority.
       version_type: release # or beta, alpha
       featured: false
-      status: 'listed' # or archived, draft, unlisted, scheduled, unknown
-      requested_status: 'listed' # or archived, draft, unlisted
-      updatable: false # default true, means updating existing version
-      delete_old_files: false # default true
+      status: listed # or archived, draft, unlisted, scheduled, unknown
+      requested_status: listed # or archived, draft, unlisted
+      upload_mode: normal # or update:replace, update:keep
 ```
