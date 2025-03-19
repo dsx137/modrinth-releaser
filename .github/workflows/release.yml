@@ -26,7 +26,7 @@ jobs:
 
       - name: Get package version
         id: get_version
-        run: echo "version=$(node -p -e \"require('./package.json').version\")" >> $GITHUB_OUTPUT
+        run: echo "version=$(node -p -e "require('./package.json').version")" >> $GITHUB_OUTPUT
 
       - name: Update Snapshot Release
         uses: andelf/nightly-release@main
