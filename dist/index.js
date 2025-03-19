@@ -39597,7 +39597,11 @@ async function findVersion(projectId, versionNumber) {
                 throw Error(`${res.status}: ${await res.text()}`);
             return (await res.json());
         })
-            .then((versions) => versions.find((version) => version.version_number === versionNumber));
+            .then((versions) => {
+            const version = versions.find((version) => version.version_number === versionNumber);
+            _utils__WEBPACK_IMPORTED_MODULE_3__/* .isNil */ .kK(version) ? _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Version not found.") : _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Version found!");
+            return version;
+        });
     });
 }
 async function createVersion(data, files) {

@@ -15,7 +15,11 @@ export async function findVersion(projectId: string, versionNumber: string) {
         if (!res.ok) throw Error(`${res.status}: ${await res.text()}`);
         return (await res.json()) as defs.Version[];
       })
-      .then((versions) => versions.find((version) => version.version_number === versionNumber));
+      .then((versions) => {
+        const version = versions.find((version) => version.version_number === versionNumber);
+        utils.isNil(version) ? core.info("Version not found.") : core.info("Version found!");
+        return version;
+      });
   });
 }
 
