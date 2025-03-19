@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import core from "@actions/core";
-import github from "@actions/github";
+import * as github from "@actions/github";
 import * as lib from "./lib";
 import * as defs from "./defs";
 import * as utils from "./utils";

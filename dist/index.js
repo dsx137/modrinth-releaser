@@ -42006,7 +42006,6 @@ var core = __nccwpck_require__(872);
 var core_default = /*#__PURE__*/__nccwpck_require__.n(core);
 // EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
 var github = __nccwpck_require__(214);
-var github_default = /*#__PURE__*/__nccwpck_require__.n(github);
 ;// CONCATENATED MODULE: ./src/lib.ts
 function lazy(initializers) {
     return new Proxy({}, {
@@ -42070,7 +42069,7 @@ const VERSION_MANIFEST_URL = "https://launchermeta.mojang.com/mc/game/version_ma
 const MODRINTH_API = "https://api.modrinth.com/v2";
 // 环境变量和上下文
 const API_TOKEN = process.env.MODRINTH_TOKEN ?? "";
-const USER_AGENT = `${(github_default()).context.repo.owner}/${(github_default()).context.repo.repo}/${(github_default()).context.sha}`;
+const USER_AGENT = `${github.context.repo.owner}/${github.context.repo.repo}/${github.context.sha}`;
 // 从输入中获取的值
 const INPUTS = lazy({
     projectId: () => core_default().getInput("project_id"),
