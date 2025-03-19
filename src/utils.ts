@@ -1,4 +1,4 @@
-import glob from "@actions/glob";
+import * as glob from "@actions/glob";
 
 export function isNil(it: unknown): it is null | undefined {
   return it === null || it === undefined;

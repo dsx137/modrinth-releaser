@@ -1,7 +1,7 @@
 "use strict";
 import FormData from "form-data";
-import core from "@actions/core";
-import fs from "fs";
+import * as core from "@actions/core";
+import * as fs from "fs";
 import * as utils from "./utils";
 import * as values from "./values";
 import * as defs from "./defs";
