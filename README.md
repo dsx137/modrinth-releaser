@@ -36,5 +36,5 @@
       featured: false
       status: listed # or archived, draft, unlisted, scheduled, unknown
       requested_status: listed # or archived, draft, unlisted
-      upload_mode: normal # or update:replace, update:keep
+      upload_mode: unique # or update:replace, update:keep
 ```
