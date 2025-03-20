@@ -1,4 +1,3 @@
-"use strict";
 import FormData from "form-data";
 import values from "./values";
 import * as core from "@actions/core";
@@ -149,7 +148,7 @@ export async function main() {
   }
 }
 
-await main()
+main()
   .then(() => core.info("✅️ Done!"))
   .catch((error) => {
     core.setFailed("❌️ " + nable.getError(error));

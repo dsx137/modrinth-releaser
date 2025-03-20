@@ -7,8 +7,6 @@ import * as defs from "./defs";
 import * as utils from "./utils";
 import * as net from "./net";
 
-await nable.enableHof();
-
 export default nable.lazy({
   VERSION_MANIFEST_URL: () => "https://launchermeta.mojang.com/mc/game/version_manifest.json",
   MODRINTH_API: () => "https://api.modrinth.com/v2",
