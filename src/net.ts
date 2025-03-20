@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
+import values from "./values";
 import { HeadersInit, BodyInit } from "node-fetch";
-import * as values from "./values";
 
 function resolveApi(path: string): string {
   return values.MODRINTH_API + path;
@@ -8,14 +8,14 @@ function resolveApi(path: string): string {
 
 export async function fetchToModrinth(method: string, path: string, headers: HeadersInit = {}, body?: BodyInit) {
   return await fetch(resolveApi(path), {
-    headers: { "User-Agent": values.USER_AGENT, Authorization: values.API_TOKEN, ...headers },
+    headers: { "User-Agent": values.userAgent, Authorization: values.token, ...headers },
     body: body,
     method,
   });
 }
 
 export async function getMcVersions() {
-  return await fetch(values.VERSION_MANIFEST_URL).then(async (res) => {
+  return await fetch("https://launchermeta.mojang.com/mc/game/version_manifest.json").then(async (res) => {
     if (!res.ok) throw Error(`${res.status}: ${await res.text()}`);
     const json = (await res.json()) as { versions: { type: string; id: string }[] };
     return json.versions
