@@ -82,28 +82,28 @@ export function validate<T extends object>(def: T, it: string): keyof T {
   return it as keyof T;
 }
 
-export interface File {
+export type File = {
   name: string;
   path: string;
-}
+};
 
-export interface VersionFile {
+export type VersionFile = {
   hashes: { sha512: string };
   filename: string;
-}
+};
 
-export interface Version {
+export type Version = {
   id: string;
   version_number: string;
   files: VersionFile[];
-}
+};
 
-export interface Dependency {
+export type Dependency = {
   project_id: string;
   dependency_type: DependencyType;
-}
+};
 
-export interface DataRequestCreateVersion {
+export type DataRequestCreateVersion = {
   name?: string; // The name of this version
   version_number?: string; // The version number. Ideally will follow semantic versioning
   changelog?: string; // The changelog for this version
@@ -117,9 +117,9 @@ export interface DataRequestCreateVersion {
   project_id: string; // The ID of the project this version is for
   file_parts: string[]; // An array of the multipart field names of each file that goes with this version
   primary_file?: string; // The multipart field name of the primary file
-}
+};
 
-export interface DataRequestModifyVersion {
+export type DataRequestModifyVersion = {
   name?: string; // The name of this version
   version_number?: string; // The version number. Ideally will follow semantic versioning
   changelog?: string; // The changelog for this version
@@ -132,4 +132,4 @@ export interface DataRequestModifyVersion {
   requested_status?: RequestedStatus; // Requested status change for the version
   primary_file?: [algorithm: Algorithm, hash: string]; // The hash format and the hash of the new primary file
   file_types?: { algorithm: Algorithm; hash: string; file_type: FileType }; // A list of file_types to edit
-}
+};
