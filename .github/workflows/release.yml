@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  relese:
+  publish:
     concurrency:
       group: release
       cancel-in-progress: true
