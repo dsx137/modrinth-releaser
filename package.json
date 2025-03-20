@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "ncc build src/index.ts --license LICENSE",
+    "build": "tsc",
     "lint": "eslint index.ts",
     "test": "npx tsx test/test.ts"
   },
