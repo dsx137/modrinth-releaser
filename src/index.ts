@@ -148,7 +148,7 @@ export async function main() {
   }
 }
 
-main()
+await main()
   .then(() => core.info("✅️ Done!"))
   .catch((error) => {
     core.setFailed("❌️ " + nable.getError(error));
