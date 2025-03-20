@@ -7,11 +7,11 @@
   "scripts": {
     "build": "ncc build src/index.ts --license LICENSE",
     "lint": "eslint index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx tsx test/test.ts"
   },
   "keywords": [],
   "author": "dsx137",
-  "license": "AGPLv3",
+  "license": "AGPL-3.0",
   "dependencies": {
     "@actions/core": "^1.10.0",
     "@actions/github": "^6.0.0",
