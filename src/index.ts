@@ -1,9 +1,9 @@
 "use strict";
 import FormData from "form-data";
+import values from "./values";
 import * as core from "@actions/core";
 import * as nable from "@dsx137/nable";
 import * as fs from "fs";
-import * as values from "./values";
 import * as defs from "./defs";
 import * as net from "./net";
 
@@ -60,16 +60,16 @@ export async function addFilesToVersion(versionId: string, files: defs.File[]) {
       "data",
       JSON.stringify({
         ...nable.trimObject({
-          name: values.INPUTS.name,
-          version_number: values.INPUTS.versionNumber,
-          changelog: values.INPUTS.changelog,
-          dependencies: values.INPUTS.dependencies,
-          game_versions: await values.INPUTS.gameVersions,
-          version_type: values.INPUTS.versionType,
-          loaders: values.INPUTS.loaders,
-          featured: values.INPUTS.featured,
-          status: values.INPUTS.status,
-          requested_status: values.INPUTS.requestedStatus,
+          name: values.name,
+          version_number: values.versionNumber,
+          changelog: values.changelog,
+          dependencies: values.dependencies,
+          game_versions: await values.gameVersions,
+          version_type: values.versionType,
+          loaders: values.loaders,
+          featured: values.featured,
+          status: values.status,
+          requested_status: values.requestedStatus,
         }),
         file_parts,
       })
@@ -100,27 +100,24 @@ export async function deleteVersionFiles(files: defs.VersionFile[]) {
 
 export async function main() {
   const baseData = nable.trimObject({
-    name: values.INPUTS.name,
-    version_number: values.INPUTS.versionNumber,
-    changelog: values.INPUTS.changelog,
-    dependencies: values.INPUTS.dependencies,
-    game_versions: await values.INPUTS.gameVersions,
-    version_type: values.INPUTS.versionType,
-    loaders: values.INPUTS.loaders,
-    featured: values.INPUTS.featured,
-    status: values.INPUTS.status,
-    requested_status: values.INPUTS.requestedStatus,
+    name: values.name,
+    version_number: values.versionNumber,
+    changelog: values.changelog,
+    dependencies: values.dependencies,
+    game_versions: await values.gameVersions,
+    version_type: values.versionType,
+    loaders: values.loaders,
+    featured: values.featured,
+    status: values.status,
+    requested_status: values.requestedStatus,
   });
 
-  const files = await values.INPUTS.files;
-  const uploadMode = values.INPUTS.uploadMode;
+  const files = await values.files;
+  const uploadMode = values.uploadMode;
 
-  const version = await findVersion(values.INPUTS.projectId, values.INPUTS.versionNumber);
+  const version = await findVersion(values.projectId, values.versionNumber);
   if (nable.isNil(version)) {
-    await createVersion(
-      { ...baseData, file_parts: files.map((it) => it.name), project_id: values.INPUTS.projectId },
-      files
-    );
+    await createVersion({ ...baseData, file_parts: files.map((it) => it.name), project_id: values.projectId }, files);
     return;
   }
 

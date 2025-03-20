@@ -39565,6 +39565,7 @@ function wrappy (fn, cb) {
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "Gu": () => (/* binding */ validate),
 /* harmony export */   "VW": () => (/* binding */ REQUESTED_STATUSES),
 /* harmony export */   "Yi": () => (/* binding */ LOADERS),
 /* harmony export */   "aK": () => (/* binding */ VERSION_TYPES),
@@ -39573,37 +39574,82 @@ function wrappy (fn, cb) {
 /* harmony export */   "xL": () => (/* binding */ UPLOAD_MODES)
 /* harmony export */ });
 /* unused harmony exports FILE_TYPES, ALGORITHMS */
-const DEPENDENCY_TYPES = ["required", "optional", "incompatible", "embedded"];
-const REQUESTED_STATUSES = ["listed", "archived", "draft", "unlisted"];
-const STATUSES = ["listed", "archived", "draft", "unlisted", "scheduled", "unknown"];
-const LOADERS = [
-    "bukkit",
-    "bungeecord",
-    "canvas",
-    "datapack",
-    "fabric",
-    "folia",
-    "forge",
-    "iris",
-    "liteloader",
-    "minecraft",
-    "modloader",
-    "neoforge",
-    "optifine",
-    "paper",
-    "purpur",
-    "quilt",
-    "rift",
-    "spigot",
-    "sponge",
-    "vanilla",
-    "velocity",
-    "waterfall",
-];
-const VERSION_TYPES = ["release", "beta", "alpha"];
-const FILE_TYPES = (/* unused pure expression or super */ null && (["required-resource-pack", "optional-resource-pack"]));
-const ALGORITHMS = (/* unused pure expression or super */ null && (["sha1", "sha512"]));
-const UPLOAD_MODES = { unique: [undefined], update: ["replace", "keep"] };
+var DEPENDENCY_TYPES;
+(function (DEPENDENCY_TYPES) {
+    DEPENDENCY_TYPES[DEPENDENCY_TYPES["required"] = 0] = "required";
+    DEPENDENCY_TYPES[DEPENDENCY_TYPES["optional"] = 1] = "optional";
+    DEPENDENCY_TYPES[DEPENDENCY_TYPES["incompatible"] = 2] = "incompatible";
+    DEPENDENCY_TYPES[DEPENDENCY_TYPES["embedded"] = 3] = "embedded";
+})(DEPENDENCY_TYPES || (DEPENDENCY_TYPES = {}));
+var REQUESTED_STATUSES;
+(function (REQUESTED_STATUSES) {
+    REQUESTED_STATUSES[REQUESTED_STATUSES["listed"] = 0] = "listed";
+    REQUESTED_STATUSES[REQUESTED_STATUSES["archived"] = 1] = "archived";
+    REQUESTED_STATUSES[REQUESTED_STATUSES["draft"] = 2] = "draft";
+    REQUESTED_STATUSES[REQUESTED_STATUSES["unlisted"] = 3] = "unlisted";
+})(REQUESTED_STATUSES || (REQUESTED_STATUSES = {}));
+var STATUSES;
+(function (STATUSES) {
+    STATUSES[STATUSES["listed"] = 0] = "listed";
+    STATUSES[STATUSES["archived"] = 1] = "archived";
+    STATUSES[STATUSES["draft"] = 2] = "draft";
+    STATUSES[STATUSES["unlisted"] = 3] = "unlisted";
+    STATUSES[STATUSES["scheduled"] = 4] = "scheduled";
+    STATUSES[STATUSES["unknown"] = 5] = "unknown";
+})(STATUSES || (STATUSES = {}));
+var LOADERS;
+(function (LOADERS) {
+    LOADERS[LOADERS["bukkit"] = 0] = "bukkit";
+    LOADERS[LOADERS["bungeecord"] = 1] = "bungeecord";
+    LOADERS[LOADERS["canvas"] = 2] = "canvas";
+    LOADERS[LOADERS["datapack"] = 3] = "datapack";
+    LOADERS[LOADERS["fabric"] = 4] = "fabric";
+    LOADERS[LOADERS["folia"] = 5] = "folia";
+    LOADERS[LOADERS["forge"] = 6] = "forge";
+    LOADERS[LOADERS["iris"] = 7] = "iris";
+    LOADERS[LOADERS["liteloader"] = 8] = "liteloader";
+    LOADERS[LOADERS["minecraft"] = 9] = "minecraft";
+    LOADERS[LOADERS["modloader"] = 10] = "modloader";
+    LOADERS[LOADERS["neoforge"] = 11] = "neoforge";
+    LOADERS[LOADERS["optifine"] = 12] = "optifine";
+    LOADERS[LOADERS["paper"] = 13] = "paper";
+    LOADERS[LOADERS["purpur"] = 14] = "purpur";
+    LOADERS[LOADERS["quilt"] = 15] = "quilt";
+    LOADERS[LOADERS["rift"] = 16] = "rift";
+    LOADERS[LOADERS["spigot"] = 17] = "spigot";
+    LOADERS[LOADERS["sponge"] = 18] = "sponge";
+    LOADERS[LOADERS["vanilla"] = 19] = "vanilla";
+    LOADERS[LOADERS["velocity"] = 20] = "velocity";
+    LOADERS[LOADERS["waterfall"] = 21] = "waterfall";
+})(LOADERS || (LOADERS = {}));
+var VERSION_TYPES;
+(function (VERSION_TYPES) {
+    VERSION_TYPES[VERSION_TYPES["release"] = 0] = "release";
+    VERSION_TYPES[VERSION_TYPES["beta"] = 1] = "beta";
+    VERSION_TYPES[VERSION_TYPES["alpha"] = 2] = "alpha";
+})(VERSION_TYPES || (VERSION_TYPES = {}));
+var FILE_TYPES;
+(function (FILE_TYPES) {
+    FILE_TYPES[FILE_TYPES["required-resource-pack"] = 0] = "required-resource-pack";
+    FILE_TYPES[FILE_TYPES["optional-resource-pack"] = 1] = "optional-resource-pack";
+})(FILE_TYPES || (FILE_TYPES = {}));
+var ALGORITHMS;
+(function (ALGORITHMS) {
+    ALGORITHMS[ALGORITHMS["sha1"] = 0] = "sha1";
+    ALGORITHMS[ALGORITHMS["sha512"] = 1] = "sha512";
+})(ALGORITHMS || (ALGORITHMS = {}));
+var UPLOAD_MODES;
+(function (UPLOAD_MODES) {
+    UPLOAD_MODES[UPLOAD_MODES["unique"] = 0] = "unique";
+    UPLOAD_MODES[UPLOAD_MODES["update:replace"] = 1] = "update:replace";
+    UPLOAD_MODES[UPLOAD_MODES["update:keep"] = 2] = "update:keep";
+})(UPLOAD_MODES || (UPLOAD_MODES = {}));
+function validate(def, it) {
+    if (!(it in def)) {
+        throw Error(`Invalid value: ${it}, expected one of ${Object.keys(def).join(", ")}`);
+    }
+    return it;
+}
 
 
 /***/ }),
@@ -39622,15 +39668,15 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony export */ });
 /* harmony import */ var form_data__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(8576);
 /* harmony import */ var form_data__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(form_data__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(872);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _dsx137_nable__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(6906);
-/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(7147);
-/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(fs__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _values__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(634);
+/* harmony import */ var _values__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(634);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(872);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _dsx137_nable__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(6906);
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(7147);
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__nccwpck_require__.n(fs__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _net__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(6233);
-var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_values__WEBPACK_IMPORTED_MODULE_4__, _net__WEBPACK_IMPORTED_MODULE_5__]);
-([_values__WEBPACK_IMPORTED_MODULE_4__, _net__WEBPACK_IMPORTED_MODULE_5__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_values__WEBPACK_IMPORTED_MODULE_1__, _net__WEBPACK_IMPORTED_MODULE_5__]);
+([_values__WEBPACK_IMPORTED_MODULE_1__, _net__WEBPACK_IMPORTED_MODULE_5__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 
 
 
@@ -39639,7 +39685,7 @@ var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_val
 
 
 async function findVersion(projectId, versionNumber) {
-    return _actions_core__WEBPACK_IMPORTED_MODULE_1__.group(`🔍 Find version [${versionNumber}]`, async () => {
+    return _actions_core__WEBPACK_IMPORTED_MODULE_2__.group(`🔍 Find version [${versionNumber}]`, async () => {
         return await _net__WEBPACK_IMPORTED_MODULE_5__/* .fetchToModrinth */ .v("GET", `/project/${projectId}/version`)
             .then(async (res) => {
             if (!res.ok)
@@ -39648,95 +39694,95 @@ async function findVersion(projectId, versionNumber) {
         })
             .then((versions) => {
             const version = versions.find((version) => version.version_number === versionNumber);
-            _dsx137_nable__WEBPACK_IMPORTED_MODULE_2__.isNil(version) ? _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Version not found.") : _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Version found!");
+            _dsx137_nable__WEBPACK_IMPORTED_MODULE_3__.isNil(version) ? _actions_core__WEBPACK_IMPORTED_MODULE_2__.info("Version not found.") : _actions_core__WEBPACK_IMPORTED_MODULE_2__.info("Version found!");
             return version;
         });
     });
 }
 async function createVersion(data, files) {
-    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group(`🆕 Create version with [${files.length}] files`, async () => {
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Files to upload: \n\t${files.map((it) => it.name).join("\n\t")}`);
+    await _actions_core__WEBPACK_IMPORTED_MODULE_2__.group(`🆕 Create version with [${files.length}] files`, async () => {
+        _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`Files to upload: \n\t${files.map((it) => it.name).join("\n\t")}`);
         const form = new (form_data__WEBPACK_IMPORTED_MODULE_0___default())();
         form.append("data", JSON.stringify(data));
-        files.forEach((file) => form.append(file.name, fs__WEBPACK_IMPORTED_MODULE_3__.createReadStream(file.path)));
+        files.forEach((file) => form.append(file.name, fs__WEBPACK_IMPORTED_MODULE_4__.createReadStream(file.path)));
         await _net__WEBPACK_IMPORTED_MODULE_5__/* .fetchToModrinth */ .v("POST", `/version`, form.getHeaders(), form).then(async (res) => {
             if (!res.ok)
                 throw Error(`${res.status}: ${await res.text()}`);
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Version created successfully!");
+            _actions_core__WEBPACK_IMPORTED_MODULE_2__.info("Version created successfully!");
         });
     });
 }
 async function modifyVersion(versionId, data) {
-    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group(`🔄 Modify version [${versionId}]`, async () => {
+    await _actions_core__WEBPACK_IMPORTED_MODULE_2__.group(`🔄 Modify version [${versionId}]`, async () => {
         await _net__WEBPACK_IMPORTED_MODULE_5__/* .fetchToModrinth */ .v("PATCH", `/version/${versionId}`, { "Content-Type": "application/json" }, JSON.stringify(data))
             .then(async (res) => {
             if (!res.ok)
                 throw Error(`${res.status}: ${await res.text()}`);
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Version modified successfully!");
+            _actions_core__WEBPACK_IMPORTED_MODULE_2__.info("Version modified successfully!");
         });
     });
 }
 async function addFilesToVersion(versionId, files) {
-    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group(`📤 Add [${files.length}] files to version`, async () => {
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Files to upload: \n\t${files.map((it) => it.name).join("\n\t")}`);
+    await _actions_core__WEBPACK_IMPORTED_MODULE_2__.group(`📤 Add [${files.length}] files to version`, async () => {
+        _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`Files to upload: \n\t${files.map((it) => it.name).join("\n\t")}`);
         const file_parts = files.map((it) => it.name);
         const form = new (form_data__WEBPACK_IMPORTED_MODULE_0___default())();
         form.append("data", JSON.stringify({
-            ..._dsx137_nable__WEBPACK_IMPORTED_MODULE_2__.trimObject({
-                name: _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.name */ .AM.name,
-                version_number: _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.versionNumber */ .AM.versionNumber,
-                changelog: _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.changelog */ .AM.changelog,
-                dependencies: _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.dependencies */ .AM.dependencies,
-                game_versions: await _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.gameVersions */ .AM.gameVersions,
-                version_type: _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.versionType */ .AM.versionType,
-                loaders: _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.loaders */ .AM.loaders,
-                featured: _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.featured */ .AM.featured,
-                status: _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.status */ .AM.status,
-                requested_status: _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.requestedStatus */ .AM.requestedStatus,
+            ..._dsx137_nable__WEBPACK_IMPORTED_MODULE_3__.trimObject({
+                name: _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].name */ .Z.name,
+                version_number: _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].versionNumber */ .Z.versionNumber,
+                changelog: _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].changelog */ .Z.changelog,
+                dependencies: _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].dependencies */ .Z.dependencies,
+                game_versions: await _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].gameVersions */ .Z.gameVersions,
+                version_type: _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].versionType */ .Z.versionType,
+                loaders: _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].loaders */ .Z.loaders,
+                featured: _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].featured */ .Z.featured,
+                status: _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].status */ .Z.status,
+                requested_status: _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].requestedStatus */ .Z.requestedStatus,
             }),
             file_parts,
         }));
-        files.forEach((file) => form.append(file.name, fs__WEBPACK_IMPORTED_MODULE_3__.createReadStream(file.path)));
-        _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Uploading new files...");
+        files.forEach((file) => form.append(file.name, fs__WEBPACK_IMPORTED_MODULE_4__.createReadStream(file.path)));
+        _actions_core__WEBPACK_IMPORTED_MODULE_2__.info("Uploading new files...");
         await _net__WEBPACK_IMPORTED_MODULE_5__/* .fetchToModrinth */ .v("POST", `/version/${versionId}/file`, form.getHeaders(), form).then(async (res) => {
             if (!res.ok)
                 throw Error(`${res.status}: ${await res.text()}`);
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("Files added successfully!");
+            _actions_core__WEBPACK_IMPORTED_MODULE_2__.info("Files added successfully!");
         });
     });
 }
 async function deleteVersionFiles(files) {
-    await _actions_core__WEBPACK_IMPORTED_MODULE_1__.group(`🗑️ Delete [${files.length}] version files`, async () => {
+    await _actions_core__WEBPACK_IMPORTED_MODULE_2__.group(`🗑️ Delete [${files.length}] version files`, async () => {
         await Promise.all(files.map(async (file) => await _net__WEBPACK_IMPORTED_MODULE_5__/* .fetchToModrinth */ .v("DELETE", `/version_file/${file.hashes.sha512}`).then(async (res) => {
             if (!res.ok)
                 throw Error(`${res.status}: ${await res.text()}`);
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("File deleted: " + file.filename);
+            _actions_core__WEBPACK_IMPORTED_MODULE_2__.info("File deleted: " + file.filename);
         })));
     });
 }
 async function main() {
-    const baseData = _dsx137_nable__WEBPACK_IMPORTED_MODULE_2__.trimObject({
-        name: _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.name */ .AM.name,
-        version_number: _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.versionNumber */ .AM.versionNumber,
-        changelog: _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.changelog */ .AM.changelog,
-        dependencies: _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.dependencies */ .AM.dependencies,
-        game_versions: await _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.gameVersions */ .AM.gameVersions,
-        version_type: _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.versionType */ .AM.versionType,
-        loaders: _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.loaders */ .AM.loaders,
-        featured: _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.featured */ .AM.featured,
-        status: _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.status */ .AM.status,
-        requested_status: _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.requestedStatus */ .AM.requestedStatus,
+    const baseData = _dsx137_nable__WEBPACK_IMPORTED_MODULE_3__.trimObject({
+        name: _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].name */ .Z.name,
+        version_number: _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].versionNumber */ .Z.versionNumber,
+        changelog: _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].changelog */ .Z.changelog,
+        dependencies: _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].dependencies */ .Z.dependencies,
+        game_versions: await _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].gameVersions */ .Z.gameVersions,
+        version_type: _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].versionType */ .Z.versionType,
+        loaders: _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].loaders */ .Z.loaders,
+        featured: _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].featured */ .Z.featured,
+        status: _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].status */ .Z.status,
+        requested_status: _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].requestedStatus */ .Z.requestedStatus,
     });
-    const files = await _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.files */ .AM.files;
-    const uploadMode = _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.uploadMode */ .AM.uploadMode;
-    const version = await findVersion(_values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.projectId */ .AM.projectId, _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.versionNumber */ .AM.versionNumber);
-    if (_dsx137_nable__WEBPACK_IMPORTED_MODULE_2__.isNil(version)) {
-        await createVersion({ ...baseData, file_parts: files.map((it) => it.name), project_id: _values__WEBPACK_IMPORTED_MODULE_4__/* .INPUTS.projectId */ .AM.projectId }, files);
+    const files = await _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].files */ .Z.files;
+    const uploadMode = _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].uploadMode */ .Z.uploadMode;
+    const version = await findVersion(_values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].projectId */ .Z.projectId, _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].versionNumber */ .Z.versionNumber);
+    if (_dsx137_nable__WEBPACK_IMPORTED_MODULE_3__.isNil(version)) {
+        await createVersion({ ...baseData, file_parts: files.map((it) => it.name), project_id: _values__WEBPACK_IMPORTED_MODULE_1__/* ["default"].projectId */ .Z.projectId }, files);
         return;
     }
     switch (uploadMode.mode) {
         case "unique":
-            _actions_core__WEBPACK_IMPORTED_MODULE_1__.notice("Version already exists. Skipping...");
+            _actions_core__WEBPACK_IMPORTED_MODULE_2__.notice("Version already exists. Skipping...");
             break;
         case "update":
             await modifyVersion(version.id, baseData);
@@ -39744,14 +39790,14 @@ async function main() {
             switch (uploadMode.addition) {
                 case "replace":
                     if (version.files.length === 0) {
-                        _actions_core__WEBPACK_IMPORTED_MODULE_1__.notice("No files to delete.");
+                        _actions_core__WEBPACK_IMPORTED_MODULE_2__.notice("No files to delete.");
                     }
                     else {
                         await deleteVersionFiles(version.files);
                     }
                     break;
                 case "keep":
-                    _actions_core__WEBPACK_IMPORTED_MODULE_1__.notice("Old files will be kept.");
+                    _actions_core__WEBPACK_IMPORTED_MODULE_2__.notice("Old files will be kept.");
                     break;
                 default:
                     throw Error(`Invalid upload mode addition: ${uploadMode.addition}`);
@@ -39762,9 +39808,9 @@ async function main() {
     }
 }
 await main()
-    .then(() => _actions_core__WEBPACK_IMPORTED_MODULE_1__.info("✅️ Done!"))
+    .then(() => _actions_core__WEBPACK_IMPORTED_MODULE_2__.info("✅️ Done!"))
     .catch((error) => {
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed("❌️ " + _dsx137_nable__WEBPACK_IMPORTED_MODULE_2__.getError(error));
+    _actions_core__WEBPACK_IMPORTED_MODULE_2__.setFailed("❌️ " + _dsx137_nable__WEBPACK_IMPORTED_MODULE_3__.getError(error));
     process.exit(1);
 });
 
@@ -39788,17 +39834,17 @@ _values__WEBPACK_IMPORTED_MODULE_0__ = (__webpack_async_dependencies__.then ? (a
 
 
 function resolveApi(path) {
-    return _values__WEBPACK_IMPORTED_MODULE_0__/* .MODRINTH_API */ .Dm + path;
+    return _values__WEBPACK_IMPORTED_MODULE_0__/* ["default"].MODRINTH_API */ .Z.MODRINTH_API + path;
 }
 async function fetchToModrinth(method, path, headers = {}, body) {
     return await (0,node_fetch__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .ZP)(resolveApi(path), {
-        headers: { "User-Agent": _values__WEBPACK_IMPORTED_MODULE_0__/* .USER_AGENT */ .yZ, Authorization: _values__WEBPACK_IMPORTED_MODULE_0__/* .API_TOKEN */ .E0, ...headers },
+        headers: { "User-Agent": _values__WEBPACK_IMPORTED_MODULE_0__/* ["default"].userAgent */ .Z.userAgent, Authorization: _values__WEBPACK_IMPORTED_MODULE_0__/* ["default"].token */ .Z.token, ...headers },
         body: body,
         method,
     });
 }
 async function getMcVersions() {
-    return await (0,node_fetch__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .ZP)(_values__WEBPACK_IMPORTED_MODULE_0__/* .VERSION_MANIFEST_URL */ .Ow).then(async (res) => {
+    return await (0,node_fetch__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .ZP)("https://launchermeta.mojang.com/mc/game/version_manifest.json").then(async (res) => {
         if (!res.ok)
             throw Error(`${res.status}: ${await res.text()}`);
         const json = (await res.json());
@@ -39837,11 +39883,7 @@ async function matchFiles(patterns) {
 
 __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
-/* harmony export */   "AM": () => (/* binding */ INPUTS),
-/* harmony export */   "Dm": () => (/* binding */ MODRINTH_API),
-/* harmony export */   "E0": () => (/* binding */ API_TOKEN),
-/* harmony export */   "Ow": () => (/* binding */ VERSION_MANIFEST_URL),
-/* harmony export */   "yZ": () => (/* binding */ USER_AGENT)
+/* harmony export */   "Z": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(7147);
 /* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(fs__WEBPACK_IMPORTED_MODULE_0__);
@@ -39866,24 +39908,20 @@ _net__WEBPACK_IMPORTED_MODULE_7__ = (__webpack_async_dependencies__.then ? (awai
 
 
 await _dsx137_nable__WEBPACK_IMPORTED_MODULE_4__.enableHof();
-// 常量
-const VERSION_MANIFEST_URL = "https://launchermeta.mojang.com/mc/game/version_manifest.json";
-const MODRINTH_API = "https://api.modrinth.com/v2";
-// 环境变量和上下文
-const API_TOKEN = process.env.MODRINTH_TOKEN ?? "";
-const USER_AGENT = `${_actions_github__WEBPACK_IMPORTED_MODULE_3__.context.repo.owner}/${_actions_github__WEBPACK_IMPORTED_MODULE_3__.context.repo.repo}/${_actions_github__WEBPACK_IMPORTED_MODULE_3__.context.sha}`;
-// 从输入中获取的值
-const INPUTS = _dsx137_nable__WEBPACK_IMPORTED_MODULE_4__.lazy({
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_dsx137_nable__WEBPACK_IMPORTED_MODULE_4__.lazy({
+    VERSION_MANIFEST_URL: () => "https://launchermeta.mojang.com/mc/game/version_manifest.json",
+    MODRINTH_API: () => "https://api.modrinth.com/v2",
+    token: () => (process.env.MODRINTH_TOKEN ?? "").nAlso((it) => {
+        if (_dsx137_nable__WEBPACK_IMPORTED_MODULE_4__.isEmpty(it))
+            throw new Error("Token is required");
+    }),
+    userAgent: () => `${_actions_github__WEBPACK_IMPORTED_MODULE_3__.context.repo.owner}/${_actions_github__WEBPACK_IMPORTED_MODULE_3__.context.repo.repo}/${_actions_github__WEBPACK_IMPORTED_MODULE_3__.context.sha}`,
     projectId: () => _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("project_id"),
     versionNumber: () => _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("version_number"),
     files: async () => await _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("files")
         .nLet((it) => _dsx137_nable__WEBPACK_IMPORTED_MODULE_4__.parseList(it))
         .nLet((it) => _utils__WEBPACK_IMPORTED_MODULE_6__/* .matchFiles */ .$(it))
-        .then((files) => {
-        return files.map((file) => {
-            return { name: path__WEBPACK_IMPORTED_MODULE_1__.basename(file), path: file };
-        });
-    }),
+        .then((files) => files.map((file) => ({ name: path__WEBPACK_IMPORTED_MODULE_1__.basename(file), path: file }))),
     name: () => _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("name"),
     changelog: () => _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("changelog").nLet((it) => {
         if (fs__WEBPACK_IMPORTED_MODULE_0__.existsSync(it)) {
@@ -39903,10 +39941,8 @@ const INPUTS = _dsx137_nable__WEBPACK_IMPORTED_MODULE_4__.lazy({
     dependencies: () => _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("dependencies")
         .nLet((it) => _dsx137_nable__WEBPACK_IMPORTED_MODULE_4__.parseList(it))
         .map((dep) => {
-        const [project_id, dependency_type] = _dsx137_nable__WEBPACK_IMPORTED_MODULE_4__.parsePair(dep);
-        if (!_dsx137_nable__WEBPACK_IMPORTED_MODULE_4__.isIn(_defs__WEBPACK_IMPORTED_MODULE_5__/* .DEPENDENCY_TYPES */ .sT, dependency_type)) {
-            throw Error(`Invalid dependency type: ${dependency_type}`);
-        }
+        const [project_id, dependency_type] = _dsx137_nable__WEBPACK_IMPORTED_MODULE_4__.parsePair(dep)
+            .nLet((it) => [it[0], _defs__WEBPACK_IMPORTED_MODULE_5__/* .validate */ .Gu(_defs__WEBPACK_IMPORTED_MODULE_5__/* .DEPENDENCY_TYPES */ .sT, it[1])]);
         return { project_id, dependency_type };
     }),
     gameVersions: async () => {
@@ -39935,43 +39971,21 @@ const INPUTS = _dsx137_nable__WEBPACK_IMPORTED_MODULE_4__.lazy({
         })
             .flat();
     },
-    versionType: () => _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("version_type").nAlso((it) => {
-        if (!_dsx137_nable__WEBPACK_IMPORTED_MODULE_4__.isIn(_defs__WEBPACK_IMPORTED_MODULE_5__/* .VERSION_TYPES */ .aK, it)) {
-            throw Error(`Invalid version type: ${it}, expected one of ${_defs__WEBPACK_IMPORTED_MODULE_5__/* .VERSION_TYPES.join */ .aK.join(", ")}`);
-        }
-    }),
+    versionType: () => _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("version_type").nLet((it) => _defs__WEBPACK_IMPORTED_MODULE_5__/* .validate */ .Gu(_defs__WEBPACK_IMPORTED_MODULE_5__/* .VERSION_TYPES */ .aK, it)),
     loaders: () => _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("loaders")
         .nLet((it) => _dsx137_nable__WEBPACK_IMPORTED_MODULE_4__.parseList(it))
-        .onEach((loader) => {
-        if (!_dsx137_nable__WEBPACK_IMPORTED_MODULE_4__.isIn(_defs__WEBPACK_IMPORTED_MODULE_5__/* .LOADERS */ .Yi, loader)) {
-            throw Error(`Invalid loader: ${loader}, expected one of ${_defs__WEBPACK_IMPORTED_MODULE_5__/* .LOADERS.join */ .Yi.join(", ")}`);
-        }
-    }),
+        .map((it) => _defs__WEBPACK_IMPORTED_MODULE_5__/* .validate */ .Gu(_defs__WEBPACK_IMPORTED_MODULE_5__/* .LOADERS */ .Yi, it)),
     featured: () => _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput("featured"),
-    status: () => _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("status").nAlso((it) => {
-        if (!_dsx137_nable__WEBPACK_IMPORTED_MODULE_4__.isIn(_defs__WEBPACK_IMPORTED_MODULE_5__/* .STATUSES */ .n$, it)) {
-            throw Error(`Invalid status: ${it}, expected one of ${_defs__WEBPACK_IMPORTED_MODULE_5__/* .STATUSES.join */ .n$.join(", ")}`);
-        }
-    }),
-    requestedStatus: () => _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("requested_status").nAlso((it) => {
-        if (!_dsx137_nable__WEBPACK_IMPORTED_MODULE_4__.isIn(_defs__WEBPACK_IMPORTED_MODULE_5__/* .REQUESTED_STATUSES */ .VW, it)) {
-            throw Error(`Invalid requested status: ${it}, expected one of ${_defs__WEBPACK_IMPORTED_MODULE_5__/* .REQUESTED_STATUSES.join */ .VW.join(", ")}`);
-        }
-    }),
+    status: () => _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("status").nLet((it) => _defs__WEBPACK_IMPORTED_MODULE_5__/* .validate */ .Gu(_defs__WEBPACK_IMPORTED_MODULE_5__/* .STATUSES */ .n$, it)),
+    requestedStatus: () => _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("requested_status").nLet((it) => _defs__WEBPACK_IMPORTED_MODULE_5__/* .validate */ .Gu(_defs__WEBPACK_IMPORTED_MODULE_5__/* .REQUESTED_STATUSES */ .VW, it)),
     uploadMode: () => {
         const [mode, addition] = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("upload_mode")
+            .nLet((it) => _defs__WEBPACK_IMPORTED_MODULE_5__/* .validate */ .Gu(_defs__WEBPACK_IMPORTED_MODULE_5__/* .UPLOAD_MODES */ .xL, it))
             .split(":")
             .map((it) => it.trim());
-        if (!(mode in _defs__WEBPACK_IMPORTED_MODULE_5__/* .UPLOAD_MODES */ .xL)) {
-            throw Error(`Invalid upload modeType: ${mode}, expected one of ${Object.keys(_defs__WEBPACK_IMPORTED_MODULE_5__/* .UPLOAD_MODES */ .xL).join(", ")}`);
-        }
-        const additions = _defs__WEBPACK_IMPORTED_MODULE_5__/* .UPLOAD_MODES */ .xL[mode];
-        if (!_dsx137_nable__WEBPACK_IMPORTED_MODULE_4__.isIn(additions, addition)) {
-            throw Error(`Invalid upload mode addition: ${addition}, expected one of ${additions.join(", ")}`);
-        }
         return { mode, addition };
     },
-});
+}));
 
 __webpack_async_result__();
 } catch(e) { __webpack_async_result__(e); } }, 1);
@@ -41912,7 +41926,7 @@ try {
 /* harmony export */ });
 /* harmony import */ var _lib_lazy__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(718);
 /* harmony reexport (checked) */ if(__nccwpck_require__.o(_lib_lazy__WEBPACK_IMPORTED_MODULE_0__, "getError")) __nccwpck_require__.d(__webpack_exports__, { "getError": function() { return _lib_lazy__WEBPACK_IMPORTED_MODULE_0__.getError; } });
-/* harmony reexport (checked) */ if(__nccwpck_require__.o(_lib_lazy__WEBPACK_IMPORTED_MODULE_0__, "isIn")) __nccwpck_require__.d(__webpack_exports__, { "isIn": function() { return _lib_lazy__WEBPACK_IMPORTED_MODULE_0__.isIn; } });
+/* harmony reexport (checked) */ if(__nccwpck_require__.o(_lib_lazy__WEBPACK_IMPORTED_MODULE_0__, "isEmpty")) __nccwpck_require__.d(__webpack_exports__, { "isEmpty": function() { return _lib_lazy__WEBPACK_IMPORTED_MODULE_0__.isEmpty; } });
 /* harmony reexport (checked) */ if(__nccwpck_require__.o(_lib_lazy__WEBPACK_IMPORTED_MODULE_0__, "isNil")) __nccwpck_require__.d(__webpack_exports__, { "isNil": function() { return _lib_lazy__WEBPACK_IMPORTED_MODULE_0__.isNil; } });
 /* harmony reexport (checked) */ if(__nccwpck_require__.o(_lib_lazy__WEBPACK_IMPORTED_MODULE_0__, "lazy")) __nccwpck_require__.d(__webpack_exports__, { "lazy": function() { return _lib_lazy__WEBPACK_IMPORTED_MODULE_0__.lazy; } });
 /* harmony reexport (checked) */ if(__nccwpck_require__.o(_lib_lazy__WEBPACK_IMPORTED_MODULE_0__, "parseList")) __nccwpck_require__.d(__webpack_exports__, { "parseList": function() { return _lib_lazy__WEBPACK_IMPORTED_MODULE_0__.parseList; } });
@@ -41920,7 +41934,7 @@ try {
 /* harmony reexport (checked) */ if(__nccwpck_require__.o(_lib_lazy__WEBPACK_IMPORTED_MODULE_0__, "trimObject")) __nccwpck_require__.d(__webpack_exports__, { "trimObject": function() { return _lib_lazy__WEBPACK_IMPORTED_MODULE_0__.trimObject; } });
 /* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(2754);
 /* harmony reexport (checked) */ if(__nccwpck_require__.o(_lib_utils__WEBPACK_IMPORTED_MODULE_1__, "getError")) __nccwpck_require__.d(__webpack_exports__, { "getError": function() { return _lib_utils__WEBPACK_IMPORTED_MODULE_1__.getError; } });
-/* harmony reexport (checked) */ if(__nccwpck_require__.o(_lib_utils__WEBPACK_IMPORTED_MODULE_1__, "isIn")) __nccwpck_require__.d(__webpack_exports__, { "isIn": function() { return _lib_utils__WEBPACK_IMPORTED_MODULE_1__.isIn; } });
+/* harmony reexport (checked) */ if(__nccwpck_require__.o(_lib_utils__WEBPACK_IMPORTED_MODULE_1__, "isEmpty")) __nccwpck_require__.d(__webpack_exports__, { "isEmpty": function() { return _lib_utils__WEBPACK_IMPORTED_MODULE_1__.isEmpty; } });
 /* harmony reexport (checked) */ if(__nccwpck_require__.o(_lib_utils__WEBPACK_IMPORTED_MODULE_1__, "isNil")) __nccwpck_require__.d(__webpack_exports__, { "isNil": function() { return _lib_utils__WEBPACK_IMPORTED_MODULE_1__.isNil; } });
 /* harmony reexport (checked) */ if(__nccwpck_require__.o(_lib_utils__WEBPACK_IMPORTED_MODULE_1__, "lazy")) __nccwpck_require__.d(__webpack_exports__, { "lazy": function() { return _lib_utils__WEBPACK_IMPORTED_MODULE_1__.lazy; } });
 /* harmony reexport (checked) */ if(__nccwpck_require__.o(_lib_utils__WEBPACK_IMPORTED_MODULE_1__, "parseList")) __nccwpck_require__.d(__webpack_exports__, { "parseList": function() { return _lib_utils__WEBPACK_IMPORTED_MODULE_1__.parseList; } });
@@ -41928,7 +41942,7 @@ try {
 /* harmony reexport (checked) */ if(__nccwpck_require__.o(_lib_utils__WEBPACK_IMPORTED_MODULE_1__, "trimObject")) __nccwpck_require__.d(__webpack_exports__, { "trimObject": function() { return _lib_utils__WEBPACK_IMPORTED_MODULE_1__.trimObject; } });
 /* harmony import */ var _lib_parser__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(9096);
 /* harmony reexport (checked) */ if(__nccwpck_require__.o(_lib_parser__WEBPACK_IMPORTED_MODULE_2__, "getError")) __nccwpck_require__.d(__webpack_exports__, { "getError": function() { return _lib_parser__WEBPACK_IMPORTED_MODULE_2__.getError; } });
-/* harmony reexport (checked) */ if(__nccwpck_require__.o(_lib_parser__WEBPACK_IMPORTED_MODULE_2__, "isIn")) __nccwpck_require__.d(__webpack_exports__, { "isIn": function() { return _lib_parser__WEBPACK_IMPORTED_MODULE_2__.isIn; } });
+/* harmony reexport (checked) */ if(__nccwpck_require__.o(_lib_parser__WEBPACK_IMPORTED_MODULE_2__, "isEmpty")) __nccwpck_require__.d(__webpack_exports__, { "isEmpty": function() { return _lib_parser__WEBPACK_IMPORTED_MODULE_2__.isEmpty; } });
 /* harmony reexport (checked) */ if(__nccwpck_require__.o(_lib_parser__WEBPACK_IMPORTED_MODULE_2__, "isNil")) __nccwpck_require__.d(__webpack_exports__, { "isNil": function() { return _lib_parser__WEBPACK_IMPORTED_MODULE_2__.isNil; } });
 /* harmony reexport (checked) */ if(__nccwpck_require__.o(_lib_parser__WEBPACK_IMPORTED_MODULE_2__, "lazy")) __nccwpck_require__.d(__webpack_exports__, { "lazy": function() { return _lib_parser__WEBPACK_IMPORTED_MODULE_2__.lazy; } });
 /* harmony reexport (checked) */ if(__nccwpck_require__.o(_lib_parser__WEBPACK_IMPORTED_MODULE_2__, "parseList")) __nccwpck_require__.d(__webpack_exports__, { "parseList": function() { return _lib_parser__WEBPACK_IMPORTED_MODULE_2__.parseList; } });

@@ -1,7 +1,24 @@
-export const DEPENDENCY_TYPES = ["required", "optional", "incompatible", "embedded"] as const;
-export const REQUESTED_STATUSES = ["listed", "archived", "draft", "unlisted"] as const;
-export const STATUSES = ["listed", "archived", "draft", "unlisted", "scheduled", "unknown"] as const;
-export const LOADERS = [
+export enum DEPENDENCY_TYPES {
+  "required",
+  "optional",
+  "incompatible",
+  "embedded",
+}
+export enum REQUESTED_STATUSES {
+  "listed",
+  "archived",
+  "draft",
+  "unlisted",
+}
+export enum STATUSES {
+  "listed",
+  "archived",
+  "draft",
+  "unlisted",
+  "scheduled",
+  "unknown",
+}
+export enum LOADERS {
   "bukkit",
   "bungeecord",
   "canvas",
@@ -24,27 +41,46 @@ export const LOADERS = [
   "vanilla",
   "velocity",
   "waterfall",
-] as const;
-export const VERSION_TYPES = ["release", "beta", "alpha"] as const;
-export const FILE_TYPES = ["required-resource-pack", "optional-resource-pack"] as const;
-export const ALGORITHMS = ["sha1", "sha512"] as const;
+}
+export enum VERSION_TYPES {
+  "release",
+  "beta",
+  "alpha",
+}
+export enum FILE_TYPES {
+  "required-resource-pack",
+  "optional-resource-pack",
+}
+export enum ALGORITHMS {
+  "sha1",
+  "sha512",
+}
 
-export type DependencyType = (typeof DEPENDENCY_TYPES)[number];
-export type RequestedStatus = (typeof REQUESTED_STATUSES)[number];
-export type Status = (typeof STATUSES)[number];
-export type Loader = (typeof LOADERS)[number];
-export type VersionType = (typeof VERSION_TYPES)[number];
-export type FileType = (typeof FILE_TYPES)[number];
-export type Algorithm = (typeof ALGORITHMS)[number];
+export type DependencyType = keyof typeof DEPENDENCY_TYPES;
+export type RequestedStatus = keyof typeof REQUESTED_STATUSES;
+export type Status = keyof typeof STATUSES;
+export type Loader = keyof typeof LOADERS;
+export type VersionType = keyof typeof VERSION_TYPES;
+export type FileType = keyof typeof FILE_TYPES;
+export type Algorithm = keyof typeof ALGORITHMS;
 
-export const UPLOAD_MODES = { unique: [undefined], update: ["replace", "keep"] } as const;
-export type UploadModeType = keyof typeof UPLOAD_MODES;
-export type UploadModeAddition<T extends UploadModeType> = (typeof UPLOAD_MODES)[T][number];
+export enum UPLOAD_MODES {
+  "unique",
+  "update:replace",
+  "update:keep",
+}
 
-export type UploadMode<T extends UploadModeType = UploadModeType> = {
-  mode: T;
-  addition: UploadModeAddition<T>;
+export type UploadMode = {
+  mode: string;
+  addition: string;
 };
+
+export function validate<T extends object>(def: T, it: string): keyof T {
+  if (!(it in def)) {
+    throw Error(`Invalid value: ${it}, expected one of ${Object.keys(def).join(", ")}`);
+  }
+  return it as keyof T;
+}
 
 export interface File {
   name: string;

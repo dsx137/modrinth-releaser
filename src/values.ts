@@ -9,16 +9,14 @@ import * as net from "./net";
 
 await nable.enableHof();
 
-// 常量
-export const VERSION_MANIFEST_URL = "https://launchermeta.mojang.com/mc/game/version_manifest.json";
-export const MODRINTH_API = "https://api.modrinth.com/v2";
-
-// 环境变量和上下文
-export const API_TOKEN = process.env.MODRINTH_TOKEN ?? "";
-export const USER_AGENT = `${github.context.repo.owner}/${github.context.repo.repo}/${github.context.sha}`;
-
-// 从输入中获取的值
-export const INPUTS = nable.lazy({
+export default nable.lazy({
+  VERSION_MANIFEST_URL: () => "https://launchermeta.mojang.com/mc/game/version_manifest.json",
+  MODRINTH_API: () => "https://api.modrinth.com/v2",
+  token: () =>
+    (process.env.MODRINTH_TOKEN ?? "").nAlso((it) => {
+      if (nable.isEmpty(it)) throw new Error("Token is required");
+    }),
+  userAgent: () => `${github.context.repo.owner}/${github.context.repo.repo}/${github.context.sha}`,
   projectId: () => core.getInput("project_id"),
   versionNumber: () => core.getInput("version_number"),
   files: async () =>
@@ -26,11 +24,7 @@ export const INPUTS = nable.lazy({
       .getInput("files")
       .nLet((it) => nable.parseList(it))
       .nLet((it) => utils.matchFiles(it))
-      .then((files) => {
-        return files.map((file) => {
-          return { name: path.basename(file), path: file } as defs.File;
-        });
-      }),
+      .then((files) => files.map((file) => ({ name: path.basename(file), path: file } as defs.File))),
   name: () => core.getInput("name"),
   changelog: () =>
     core.getInput("changelog").nLet((it) => {
@@ -51,10 +45,9 @@ export const INPUTS = nable.lazy({
       .getInput("dependencies")
       .nLet((it) => nable.parseList(it))
       .map((dep) => {
-        const [project_id, dependency_type] = nable.parsePair(dep);
-        if (!nable.isIn(defs.DEPENDENCY_TYPES, dependency_type)) {
-          throw Error(`Invalid dependency type: ${dependency_type}`);
-        }
+        const [project_id, dependency_type] = nable
+          .parsePair(dep)
+          .nLet((it) => [it[0], defs.validate(defs.DEPENDENCY_TYPES, it[1])]);
         return { project_id, dependency_type } as defs.Dependency;
       }),
   gameVersions: async () => {
@@ -79,46 +72,21 @@ export const INPUTS = nable.lazy({
       })
       .flat();
   },
-  versionType: () =>
-    core.getInput("version_type").nAlso((it) => {
-      if (!nable.isIn(defs.VERSION_TYPES, it)) {
-        throw Error(`Invalid version type: ${it}, expected one of ${defs.VERSION_TYPES.join(", ")}`);
-      }
-    }) as defs.VersionType,
+  versionType: () => core.getInput("version_type").nLet((it) => defs.validate(defs.VERSION_TYPES, it)),
   loaders: () =>
     core
       .getInput("loaders")
       .nLet((it) => nable.parseList(it))
-      .onEach((loader) => {
-        if (!nable.isIn(defs.LOADERS, loader)) {
-          throw Error(`Invalid loader: ${loader}, expected one of ${defs.LOADERS.join(", ")}`);
-        }
-      }) as defs.Loader[],
+      .map((it) => defs.validate(defs.LOADERS, it) as defs.Loader),
   featured: () => core.getBooleanInput("featured"),
-  status: () =>
-    core.getInput("status").nAlso((it) => {
-      if (!nable.isIn(defs.STATUSES, it)) {
-        throw Error(`Invalid status: ${it}, expected one of ${defs.STATUSES.join(", ")}`);
-      }
-    }) as defs.Status,
-  requestedStatus: () =>
-    core.getInput("requested_status").nAlso((it) => {
-      if (!nable.isIn(defs.REQUESTED_STATUSES, it)) {
-        throw Error(`Invalid requested status: ${it}, expected one of ${defs.REQUESTED_STATUSES.join(", ")}`);
-      }
-    }) as defs.RequestedStatus,
+  status: () => core.getInput("status").nLet((it) => defs.validate(defs.STATUSES, it)),
+  requestedStatus: () => core.getInput("requested_status").nLet((it) => defs.validate(defs.REQUESTED_STATUSES, it)),
   uploadMode: () => {
     const [mode, addition] = core
       .getInput("upload_mode")
+      .nLet((it) => defs.validate(defs.UPLOAD_MODES, it))
       .split(":")
       .map((it) => it.trim());
-    if (!(mode in defs.UPLOAD_MODES)) {
-      throw Error(`Invalid upload modeType: ${mode}, expected one of ${Object.keys(defs.UPLOAD_MODES).join(", ")}`);
-    }
-    const additions = defs.UPLOAD_MODES[mode as defs.UploadModeType];
-    if (!nable.isIn(additions, addition)) {
-      throw Error(`Invalid upload mode addition: ${addition}, expected one of ${additions.join(", ")}`);
-    }
     return { mode, addition } as defs.UploadMode;
   },
 });
