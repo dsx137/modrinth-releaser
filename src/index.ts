@@ -1,8 +1,8 @@
 "use strict";
 import FormData from "form-data";
 import * as core from "@actions/core";
+import * as nable from "@dsx137/nable";
 import * as fs from "fs";
-import * as utils from "./utils";
 import * as values from "./values";
 import * as defs from "./defs";
 import * as net from "./net";
@@ -17,7 +17,7 @@ export async function findVersion(projectId: string, versionNumber: string) {
       })
       .then((versions) => {
         const version = versions.find((version) => version.version_number === versionNumber);
-        utils.isNil(version) ? core.info("Version not found.") : core.info("Version found!");
+        nable.isNil(version) ? core.info("Version not found.") : core.info("Version found!");
         return version;
       });
   });
@@ -59,7 +59,7 @@ export async function addFilesToVersion(versionId: string, files: defs.File[]) {
     form.append(
       "data",
       JSON.stringify({
-        ...utils.trimObject({
+        ...nable.trimObject({
           name: values.INPUTS.name,
           version_number: values.INPUTS.versionNumber,
           changelog: values.INPUTS.changelog,
@@ -99,7 +99,7 @@ export async function deleteVersionFiles(files: defs.VersionFile[]) {
 }
 
 export async function main() {
-  const baseData = utils.trimObject({
+  const baseData = nable.trimObject({
     name: values.INPUTS.name,
     version_number: values.INPUTS.versionNumber,
     changelog: values.INPUTS.changelog,
@@ -116,7 +116,7 @@ export async function main() {
   const uploadMode = values.INPUTS.uploadMode;
 
   const version = await findVersion(values.INPUTS.projectId, values.INPUTS.versionNumber);
-  if (utils.isNil(version)) {
+  if (nable.isNil(version)) {
     await createVersion(
       { ...baseData, file_parts: files.map((it) => it.name), project_id: values.INPUTS.projectId },
       files
@@ -155,6 +155,6 @@ export async function main() {
 await main()
   .then(() => core.info("✅️ Done!"))
   .catch((error) => {
-    core.setFailed("❌️ " + utils.getError(error));
+    core.setFailed("❌️ " + nable.getError(error));
     process.exit(1);
   });
