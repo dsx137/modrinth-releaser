@@ -19,6 +19,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Generate Changelog
+        id: get_changelog
+        run: |
+          tag="$(git --no-pager tag --sort=creatordate --merged ${{ github.ref_name }} | grep nightly | tail -1)"
+          limit="-1"
+          if [ -n "$tag" ]; then
+            limit="$tag..HEAD"
+          fi
+          changelog="$(echo -ne "$(git log "$limit" --pretty=format:'- %s')")"
+          changelog="$(echo -e "$changelog" | sed 's/$/  /')"
+          echo "changelog=$changelog">> $GITHUB_OUTPUT
+
       - name: Update Snapshot Release
         uses: andelf/nightly-release@main
         env:
@@ -27,4 +39,4 @@ jobs:
           tag_name: nightly
           name: nightly-$$-${{ github.run_id }}
           prerelease: true
-          body: ${{ github.event.head_commit.message }}
+          body: ${{ steps.get_changelog.outputs.changelog }}

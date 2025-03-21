@@ -20,5 +20,5 @@ await (async () => {
 
     return true;
   };
-  await import("../dist/index");
+  await import("../src/index");
 })();
