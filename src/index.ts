@@ -16,7 +16,11 @@ export async function findVersion(projectId: string, versionNumber: string) {
       })
       .then((versions) => {
         const version = versions.find((version) => version.version_number === versionNumber);
-        nable.isNil(version) ? core.info("Version not found.") : core.info("Version found!");
+        if (nable.isNil(version)) {
+          core.info("Version not found.");
+        } else {
+          core.info("Version found!");
+        }
         return version;
       });
   });
